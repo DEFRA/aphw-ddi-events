@@ -1,4 +1,9 @@
-#!/usr/bin/env sh
+if [ -n "$(docker container ls --filter label=com.docker.compose.pay.role=ffc-pay-event-store-azurite --format={{.ID}})" ]; then
+  echo "Azurite container already exists, skipping creation"
+  args="--scale ffc-pay-event-store-azurite=0"
+fi
+
+
 set -e
 projectRoot="$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)"
 
@@ -9,4 +14,4 @@ docker-compose down
 docker-compose \
   -f docker-compose.yaml \
   -f docker-compose.override.yaml \
-  up $@
+  up $args $@

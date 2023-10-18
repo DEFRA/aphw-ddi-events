@@ -1,0 +1,18 @@
+{{- include "ffc-helm-library.container-config-map" (list . "dangerous-dogs-index-events.config-map") -}}
+{{- define "dangerous-dogs-index-events.config-map" -}}
+data:
+  NODE_ENV: {{ quote .Values.environment }}
+  APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
+  MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
+  {{- if and (.Values.environmentCode) (not .Values.pr) }}
+  EVENTS_TOPIC_ADDRESS: {{ .Values.container.eventsTopicAddress }}-{{ .Values.environmentCode }}
+  ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}-{{ .Values.environmentCode }}
+  {{ else }}
+  EVENTS_TOPIC_ADDRESS: {{ quote .Values.container.eventsTopicAddress }}
+  ALERT_TOPIC_ADDRESS: {{ quote .Values.container.alertTopicAddress }}
+  {{- end }}
+  EVENTS_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.eventsSubscriptionAddress }}
+  AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
+  AZURE_STORAGE_USE_CONNECTION_STRING: {{ quote .Values.container.azureStorageUseConnectionString }}
+  AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.azureStorageAccountName }}
+{{- end -}}

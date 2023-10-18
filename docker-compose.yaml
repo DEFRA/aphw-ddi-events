@@ -1,10 +1,27 @@
 services:
-  ffc-template-node:
+  dangerous-dogs-index-events:
     build:
       context: .
       target: production
-    image: ffc-template-node
-    container_name: ffc-template-node
+    image: dangerous-dogs-index-events
+    container_name: dangerous-dogs-index-events
+    depends_on:
+      - dangerous-dogs-index-event-store-azurite
     environment:
-      APPINSIGHTS_CLOUDROLE: ffc-template-node-local
+      APPINSIGHTS_CLOUDROLE: dangerous-dogs-index-events-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
+      MESSAGE_QUEUE_HOST: ${MESSAGE_QUEUE_HOST}
+      MESSAGE_QUEUE_PASSWORD: ${MESSAGE_QUEUE_PASSWORD}
+      MESSAGE_QUEUE_USER: ${MESSAGE_QUEUE_USER}
+      EVENTS_TOPIC_ADDRESS: ${EVENT_TOPIC_ADDRESS:-dangerous-dogs-index-events}${MESSAGE_QUEUE_SUFFIX}
+      EVENTS_SUBSCRIPTION_ADDRESS: ${EVENT_SUBSCRIPTION_ADDRESS:-dangerous-dogs-index-event-hub}${MESSAGE_QUEUE_SUFFIX}
+      ALERT_TOPIC_ADDRESS: ${ALERT_TOPIC_ADDRESS:-dangerous-dogs-index-alert}${MESSAGE_QUEUE_SUFFIX}
+      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://dangerous-dogs-index-event-store-azurite:10002/devstoreaccount1;
+      AZURE_STORAGE_ACCOUNT_NAME: devstoreaccount1
+
+  dangerous-dogs-index-event-store-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.23.0
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose"
+    labels:
+      com.docker.compose.pay.role: dangerous-dogs-index-event-store-azurite

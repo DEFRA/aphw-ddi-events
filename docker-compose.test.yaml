@@ -2,11 +2,11 @@
 # that test output is saved to the host
 
 services:
-  ffc-template-node:
+  dangerous-dogs-index-events:
     build:
       target: development
-    image: ffc-template-node-development
-    container_name: ffc-template-node-test
+    image: dangerous-dogs-index-events-development
+    container_name: dangerous-dogs-index-events-test
     command: npm run test
     volumes:
       - ./app:/home/node/app
@@ -14,3 +14,7 @@ services:
       - ./test-output:/home/node/test-output
       - ./jest.config.js:/home/node/jest.config.js
       - ./package.json:/home/node/package.json
+
+  dangerous-dogs-index-event-store-azurite:
+    labels:
+      com.docker.compose.pay.role: test

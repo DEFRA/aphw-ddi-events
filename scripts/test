@@ -3,7 +3,7 @@
 set -e
 projectRoot="$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)"
 
-service="ffc-template-node"
+service="ffc-pay-event-hub"
 
 show_help() {
   echo "
@@ -64,7 +64,7 @@ compose() {
   if [ "${debug}" = "true" ]; then
     compose run --service-ports ${service} ${command}
   else
-    compose run --rm ${service} ${command}
+    compose run ${service} ${command}
   fi
 
   # Clean up

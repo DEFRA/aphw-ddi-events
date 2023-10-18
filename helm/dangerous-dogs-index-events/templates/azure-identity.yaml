@@ -1,0 +1,5 @@
+{{- if .Values.aadPodIdentity }}
+{{- include "ffc-helm-library.azure-identity" (list . "dangerous-dogs-index-events.azure-identity") -}}
+{{- end }}
+{{- define "dangerous-dogs-index-events.azure-identity" -}}
+{{- end -}}

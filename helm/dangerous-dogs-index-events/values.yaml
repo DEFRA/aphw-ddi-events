@@ -1,0 +1,44 @@
+environment: production
+environmentCode:
+name: dangerous-dogs-index-events
+namespace: dangerous-dogs
+workstream: dangerous-dogs
+image: dangerous-dogs-index-events
+
+labels:
+  component: service
+
+appInsights:
+  connectionString:
+
+containerConfigMap:
+  name: dangerous-dogs-index-events-config-map
+
+containerSecret:
+  name: dangerous-dogs-index-events-container-secret
+  type: Opaque
+
+deployment:
+  minReplicas: 1
+  maxReplicas: 4
+  cpuThreshold: 80
+  memoryThreshold: 80 
+
+container:
+  requestMemory: 100Mi
+  requestCpu: 100m
+  limitMemory: 200Mi
+  limitCpu: 200m
+  messageQueueHost: namespace.servicebus.windows.net
+  eventsTopicAddress: dangerous-dogs-index-events
+  eventsSubscriptionAddress: dangerous-dogs-index-hub
+  alertTopicAddress: dangerous-dogs-index-alert
+  azureStorageConnectionString: dummy
+  azureStorageUseConnectionString: false
+  azureStorageAccountName: dangerousdogindex
+
+aadPodIdentity: true
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID

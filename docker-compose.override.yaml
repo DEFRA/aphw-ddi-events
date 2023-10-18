@@ -2,14 +2,25 @@
 # to provide dependencies and expose ports for local testing
 
 services:
-  ffc-template-node:
+  dangerous-dogs-index-events:
     build:
       target: development
-    image: ffc-template-node-development
-    container_name: ffc-template-node-development
+    image: dangerous-dogs-index-events-development
+    container_name: dangerous-dogs-index-events-development
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "3005:3000"
+      - "9235:9229"
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
+
+  dangerous-dogs-index-event-store-azurite:
+    volumes:
+      - azurite_data:/data
+    ports:
+      - "10080:10000"
+      - "10081:10001"
+      - "10082:10002"
+
+volumes:
+  azurite_data:
