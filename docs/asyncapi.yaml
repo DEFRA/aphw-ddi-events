@@ -1,0 +1,105 @@
+asyncapi: 2.6.0
+info:
+  title: Dangerous Dog Index Event
+  version: 1.0.0
+  description: Persist events raised from Dangerous Dog Index
+channels:
+  dangerous-dogs-index-events:
+    subscribe:
+      message:
+        $ref: '#/components/messages/Event'
+  dangerous-dogs-index-alert:
+    publish:
+      message:
+        $ref: '#/components/messages/Event'
+components:
+  messages:
+    Event:
+      name: Event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/Event'
+  schemas:
+    Event:
+      type: object
+      required:
+        - specversion
+        - type
+        - source
+        - id
+        - time
+      properties:
+        specversion:
+          $ref: '#/components/schemas/Specversion'
+        type:
+          $ref: '#/components/schemas/Type'
+        source:
+          $ref: '#/components/schemas/Source'
+        id:
+          $ref: '#/components/schemas/Id'
+        time:
+          $ref: '#/components/schemas/Time'
+        subject:
+          $ref: '#/components/schemas/Subject'
+        datacontenttype:
+          $ref: '#/components/schemas/Datacontenttype'
+        data:
+          oneOf:
+          - $ref: '#/components/schemas/EventData'
+          - $ref: '#/components/schemas/CommentData'
+          - $ref: '#/components/schemas/WarningData'
+    EventData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'
+    CommentData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'
+    WarningData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'
+    Specversion:
+          type: string
+          description: The version of the CloudEvents specification which the event uses.
+          example: '1.0'
+    Type:
+      type: string
+      description: The type of event in reverse DNS notation.
+      example: uk.gov.defra.dangerous-dogs-index.event.add
+    Source:
+      type: string
+      description: The service publishing the event.
+      example: dangerous-dogs-index-portal
+    Id:
+      type: string
+      format: uuid
+      description: The unique ID of the event.
+      example: 123e4567-e89b-12d3-a456-426655440000
+    Time:
+      type: string
+      format: date-time
+      description: The time the event was published.
+      example: '2020-01-01T12:00:00Z'
+    Subject:
+      type: string
+      description: The subject of the event.
+      example: New record added
+    Datacontenttype:
+      type: string
+      description: The content type of the event payload.
+      example: text/json
+    Message:
+      type: string
+      description: Warning message.
+      example: 'Warning: Overdue action.'

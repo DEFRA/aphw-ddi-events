@@ -31,7 +31,7 @@ container:
   limitCpu: 200m
   messageQueueHost: namespace.servicebus.windows.net
   eventsTopicAddress: dangerous-dogs-index-events
-  eventsSubscriptionAddress: dangerous-dogs-index-hub
+  eventsSubscriptionAddress: dangerous-dogs-index-event-hub
   alertTopicAddress: dangerous-dogs-index-alert
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false

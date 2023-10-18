@@ -1,103 +1,126 @@
-# FFC Template Node
+# Dangerous Dogs Index Events
 
-Template to support rapid delivery of microservices for FFC Platform. It contains the configuration needed to deploy a simple Hapi Node server to the Azure Kubernetes Platform.
+Microservice to consume event updates from Dangerous Dogs Index and persist in event store.
 
-## Usage
-
-Create a new repository from this template and run `./rename.js` specifying the new name of the project and the description to use e.g.
+```mermaid
+flowchart LR
+dangerous-dogs-index-events(Kubernetes - dangerous-dogs-index-events)
+topic-events[Azure Service Bus Topic - dangerous-dogs-index-events]
+topic-alert[Azure Service Bus Topic - dangerous-dogs-index-alert]
+storage-events[Azure Table Storage - events]
+storage-bcomments[Azure Table Storage - comments]
+storage-warnings[Azure Table Storage - warnings]
+topic-events ==> dangerous-dogs-index-events
+dangerous-dogs-index-events ==> storage-events
+dangerous-dogs-index-events ==> storage-commets
+dangerous-dogs-index-events ==> storage-warnings
+dangerous-dogs-index-events ==> topic-alert
 ```
-./rename.js ffc-demo-web "Web frontend for demo workstream"
-```
-
-The script will update the following:
-
-* `package.json`: update `name`, `description`, `homepage`
-* `docker-compose.yaml`: update the service name, `image` and `container_name`
-* `docker-compose.test.yaml`: update the service name, `image` and `container_name`
-* `docker-compose.override.yaml`: update the service name, `image` and `container_name`
-* Rename `helm/ffc-template-node`
-* `helm/ffc-template-node/Chart.yaml`: update `description` and `name`
-* `helm/ffc-template-node/values.yaml`: update  `name`, `namespace`, `workstream`, `image`, `containerConfigMap.name`
-* `helm/ffc-template-node/templates/_container.yaml`: update the template name
-* `helm/ffc-template-node/templates/cluster-ip-service.yaml`: update the template name and list parameter of include
-* `helm/ffc-template-node/templates/config-map.yaml`: update the template name and list parameter of include
-* `helm/ffc-template-node/templates/deployment.yaml`: update the template name, list parameter of deployment and container includes
-
-### Notes on automated rename
-
-* The Helm chart deployment values in `helm/ffc-template-node/values.yaml` may need updating depending on the resource needs of your microservice
-* The rename is a one-way operation i.e. currently it doesn't allow the name being changed from to be specified
-* There is some validation on the input to try and ensure the rename is successful, however, it is unlikely to stand up to malicious entry
-* Once the rename has been performed the script can be removed from the repo
-* Should the rename go awry the changes can be reverted via `git clean -df && git checkout -- .`
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- [Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)
+- [Docker](https://www.docker.com/)
+- Either:
+  - [Docker Compose](https://docs.docker.com/compose/install/linux/#install-the-plugin-manually)
+  - [Docker-Compose (standalone)](https://docs.docker.com/compose/install/other/)
 
 Optional:
-- Kubernetes
-- Helm
+- [Kubernetes](https://kubernetes.io/)
+- [Helm](https://helm.sh/)
 
-## Running the application
+### Configuration
 
-The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
+#### Azure Service Bus
 
-- A Helm chart is provided for production deployments to Kubernetes.
+This service publishes responses as messages to Azure Service Bus topics.
 
-### Build container image
+| Name | Description |
+| ---| --- |
+| `MESSAGE_QUEUE_HOST` | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
+| `MESSAGE_QUEUE_USER` | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`    |
+| `MESSAGE_QUEUE_PASSWORD` | Azure Service Bus SAS policy key |
+| `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-jw `|
+| `EVENT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `dangerous-dogs-index-eventss` |
+| `EVENT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `dangerous-dogs-index-event-hub` |
+| `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `dangerous-dogs-index-alert` |
 
-Container images are built using Docker Compose, with the same images used to run the service with either Docker Compose or Kubernetes.
+##### Message schemas
 
-When using the Docker Compose files in development the local `app` folder will
-be mounted on top of the `app` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
+All message schemas are fully documented in an [AsyncAPI specification](docs/asyncapi.yaml).
 
+## Setup
 
-By default, the start script will build (or rebuild) images so there will
-rarely be a need to build images manually. However, this can be achieved
-through the Docker Compose
-[build](https://docs.docker.com/compose/reference/build/) command:
+### Configuration
+
+These configuration values should be set in the [docker-compose.yaml](docker-compose.yaml) file or Helm [values file](helm/dangerous-dogs-index-events/values.yaml) if running Kubernetes.
+
+| Name | Description |
+| ---| --- |
+| `APPINSIGHTS_CLOUDROLE` | Azure App Insights cloud role |
+| `APPINSIGHTS_CONNECTIONSTRING` | Azure App Insights connection string |
+
+#### Docker
+
+Docker Compose can be used to build the container image.
 
 ```
-# Build container images
 docker-compose build
 ```
 
-### Start
+The service will file watch application and test files so no need to rebuild the container unless a change to an npm package is made.
 
-Use Docker Compose to run service locally.
+## How to start the service
 
+The service can be run using the [start](scripts/start) script.
 ```
-docker-compose up
+./scripts/start
 ```
 
-## Test structure
+This script accepts any Docker Compose [Up](https://docs.docker.com/engine/reference/commandline/compose_up/) argument.
 
-The tests have been structured into subfolders of `./test` as per the
-[Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
+### Debugging
 
-### Running tests
+A debugger can be attached to the running application using port `9980`.
 
-A convenience script is provided to run automated tests in a containerised
-environment. This will rebuild images before running tests via docker-compose,
-using a combination of `docker-compose.yaml` and `docker-compose.test.yaml`.
-The command given to `docker-compose run` may be customised by passing
-arguments to the test script.
+## How to get an output
 
-Examples:
+The output of this service is an entry or entries added to the Azure Table Storage tables following receipt of a valid
+event received from the Azure Service Bus subscription.
 
+Use the [AsyncAPI specification](docs/asyncapi.yaml) to obtain a test input and submit to the Azure Service Bus topic, `dangerous-dogs-index-events`.
+
+You can use the [Azure Storage Explorer](https://azure.microsoft.com/en-gb/features/storage-explorer/) to view the contents of the Azure Table Storage tables.
+
+## How to stop the service
+
+The service can be stopped using the [stop](scripts/stop) script.
 ```
-# Run all tests
-scripts/test
-
-# Run tests with file watch
-scripts/test -w
+./scripts/stop
 ```
+
+The script accepts any Docker Compose [Down](https://docs.docker.com/engine/reference/commandline/compose_down/) argument.
+
+For example, to stop the service and clear all data volumes.
+```
+./scripts/stop -v
+```
+
+## How to test the service
+
+The service can be tested using the [test](scripts/test) script.
+```
+./scripts/test
+```
+
+The script accepts the following arguments:
+
+- `--watch/-w` - run tests with file watching to support Test Driven Development scenarios (TDD)
+- `--debug/-d` - run tests in debug mode. Same as watch mode but will wait for a debugger to be attached before running tests.
 
 ## CI pipeline
 
-This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
+This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library).
 
 ## Licence
 
