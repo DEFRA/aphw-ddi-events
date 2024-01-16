@@ -1,27 +1,27 @@
 services:
-  dangerous-dogs-index-events:
+  aphw-ddi-events:
     build:
       context: .
       target: production
-    image: dangerous-dogs-index-events
-    container_name: dangerous-dogs-index-events
+    image: aphw-ddi-events
+    container_name: aphw-ddi-events
     depends_on:
-      - dangerous-dogs-index-event-store-azurite
+      - aphw-ddi-event-store-azurite
     environment:
-      APPINSIGHTS_CLOUDROLE: dangerous-dogs-index-events-local
+      APPINSIGHTS_CLOUDROLE: aphw-ddi-events-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
       MESSAGE_QUEUE_HOST: ${MESSAGE_QUEUE_HOST}
       MESSAGE_QUEUE_PASSWORD: ${MESSAGE_QUEUE_PASSWORD}
       MESSAGE_QUEUE_USER: ${MESSAGE_QUEUE_USER}
-      EVENTS_TOPIC_ADDRESS: ${EVENT_TOPIC_ADDRESS:-dangerous-dogs-index-events}${MESSAGE_QUEUE_SUFFIX}
-      EVENTS_SUBSCRIPTION_ADDRESS: ${EVENT_SUBSCRIPTION_ADDRESS:-dangerous-dogs-index-event-hub}${MESSAGE_QUEUE_SUFFIX}
-      ALERT_TOPIC_ADDRESS: ${ALERT_TOPIC_ADDRESS:-dangerous-dogs-index-alert}${MESSAGE_QUEUE_SUFFIX}
+      EVENTS_TOPIC_ADDRESS: ${EVENT_TOPIC_ADDRESS:-aphw-ddi-events}${MESSAGE_QUEUE_SUFFIX}
+      EVENTS_SUBSCRIPTION_ADDRESS: ${EVENT_SUBSCRIPTION_ADDRESS:-aphw-ddi-event-hub}${MESSAGE_QUEUE_SUFFIX}
+      ALERT_TOPIC_ADDRESS: ${ALERT_TOPIC_ADDRESS:-aphw-ddi-alert}${MESSAGE_QUEUE_SUFFIX}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
-      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://dangerous-dogs-index-event-store-azurite:10002/devstoreaccount1;
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://aphw-ddi-event-store-azurite:10002/devstoreaccount1;
       AZURE_STORAGE_ACCOUNT_NAME: devstoreaccount1
 
-  dangerous-dogs-index-event-store-azurite:
+  aphw-ddi-event-store-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.23.0
     command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose"
     labels:
-      com.docker.compose.pay.role: dangerous-dogs-index-event-store-azurite
+      com.docker.compose.pay.role: aphw-ddi-event-store-azurite

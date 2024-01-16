@@ -1,5 +1,5 @@
-{{- include "ffc-helm-library.container-config-map" (list . "dangerous-dogs-index-events.config-map") -}}
-{{- define "dangerous-dogs-index-events.config-map" -}}
+{{- include "ffc-helm-library.container-config-map" (list . "aphw-ddi-events.config-map") -}}
+{{- define "aphw-ddi-events.config-map" -}}
 data:
   NODE_ENV: {{ quote .Values.environment }}
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}

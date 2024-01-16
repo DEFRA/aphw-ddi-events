@@ -1,5 +1,5 @@
-{{- include "ffc-helm-library.horizontal-pod-autoscaler" (list . "dangerous-dogs-index-events.horizontal-pod-autoscaler") -}}
-{{- define "dangerous-dogs-index-events.horizontal-pod-autoscaler" -}}
+{{- include "ffc-helm-library.horizontal-pod-autoscaler" (list . "aphw-ddi-events.horizontal-pod-autoscaler") -}}
+{{- define "aphw-ddi-events.horizontal-pod-autoscaler" -}}
 spec:  
   metrics:
   - type: Resource

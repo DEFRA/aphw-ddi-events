@@ -1,9 +1,9 @@
 environment: production
 environmentCode:
-name: dangerous-dogs-index-events
-namespace: dangerous-dogs
-workstream: dangerous-dogs
-image: dangerous-dogs-index-events
+name: aphw-ddi-events
+namespace: aphw-ddi
+workstream: aphw-ddi
+image: aphw-ddi-events
 
 labels:
   component: service
@@ -12,10 +12,10 @@ appInsights:
   connectionString:
 
 containerConfigMap:
-  name: dangerous-dogs-index-events-config-map
+  name: aphw-ddi-events-config-map
 
 containerSecret:
-  name: dangerous-dogs-index-events-container-secret
+  name: aphw-ddi-events-container-secret
   type: Opaque
 
 deployment:
@@ -30,9 +30,9 @@ container:
   limitMemory: 200Mi
   limitCpu: 200m
   messageQueueHost: namespace.servicebus.windows.net
-  eventsTopicAddress: dangerous-dogs-index-events
-  eventsSubscriptionAddress: dangerous-dogs-index-event-hub
-  alertTopicAddress: dangerous-dogs-index-alert
+  eventsTopicAddress: aphw-ddi-events
+  eventsSubscriptionAddress: aphw-ddi-event-hub
+  alertTopicAddress: aphw-ddi-index-alert
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
   azureStorageAccountName: dangerousdogindex

@@ -2,11 +2,11 @@
 # that test output is saved to the host
 
 services:
-  dangerous-dogs-index-events:
+  aphw-ddi-events:
     build:
       target: development
-    image: dangerous-dogs-index-events-development
-    container_name: dangerous-dogs-index-events-test
+    image: aphw-ddi-events-development
+    container_name: aphw-ddi-events-test
     command: npm run test
     volumes:
       - ./app:/home/node/app
