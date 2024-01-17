@@ -40,10 +40,10 @@ This service publishes responses as messages to Azure Service Bus topics.
 | `MESSAGE_QUEUE_HOST` | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
 | `MESSAGE_QUEUE_USER` | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`    |
 | `MESSAGE_QUEUE_PASSWORD` | Azure Service Bus SAS policy key |
-| `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-jw `|
-| `EVENT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `aphw-ddi-eventss` |
-| `EVENT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `dangerous-dogs-index-event-hub` |
-| `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `dangerous-dogs-index-alert` |
+| `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-sd `|
+| `EVENT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `aphw-ddi-events` |
+| `EVENT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `aphw-ddi-event-hub` |
+| `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `aphw-ddi-alert` |
 
 ##### Message schemas
 
