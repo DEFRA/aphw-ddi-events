@@ -1,4 +1,4 @@
-const COMMON_EVENT_PREFIX = 'uk.gov.defra.dangerous-dogs-index.'
+const COMMON_EVENT_PREFIX = 'uk.gov.defra.ddi.'
 
 module.exports = {
   EVENT_PREFIX: `${COMMON_EVENT_PREFIX}event.`,
