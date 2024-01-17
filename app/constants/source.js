@@ -1,3 +1,3 @@
 module.exports = {
-  SOURCE: 'dangerous-dogs-index-portal'
+  SOURCE: 'aphw-ddi-portal'
 }
