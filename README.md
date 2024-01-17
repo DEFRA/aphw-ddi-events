@@ -1,20 +1,20 @@
-# Dangerous Dogs Index Events
+# aphw-ddi-events
 
 Microservice to consume event updates from Dangerous Dogs Index and persist in event store.
 
 ```mermaid
 flowchart LR
-dangerous-dogs-index-events(Kubernetes - dangerous-dogs-index-events)
-topic-events[Azure Service Bus Topic - dangerous-dogs-index-events]
-topic-alert[Azure Service Bus Topic - dangerous-dogs-index-alert]
+aphw-ddi-events(Kubernetes - aphw-ddi-events)
+topic-events[Azure Service Bus Topic - aphw-ddi-events]
+topic-alert[Azure Service Bus Topic - aphw-ddi-alert]
 storage-events[Azure Table Storage - events]
 storage-bcomments[Azure Table Storage - comments]
 storage-warnings[Azure Table Storage - warnings]
-topic-events ==> dangerous-dogs-index-events
-dangerous-dogs-index-events ==> storage-events
-dangerous-dogs-index-events ==> storage-commets
-dangerous-dogs-index-events ==> storage-warnings
-dangerous-dogs-index-events ==> topic-alert
+topic-events ==> aphw-ddi-events
+aphw-ddi-events ==> storage-events
+aphw-ddi-events ==> storage-commets
+aphw-ddi-events ==> storage-warnings
+aphw-ddi-events ==> topic-alert
 ```
 
 ## Prerequisites
@@ -41,7 +41,7 @@ This service publishes responses as messages to Azure Service Bus topics.
 | `MESSAGE_QUEUE_USER` | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`    |
 | `MESSAGE_QUEUE_PASSWORD` | Azure Service Bus SAS policy key |
 | `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-jw `|
-| `EVENT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `dangerous-dogs-index-eventss` |
+| `EVENT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `aphw-ddi-eventss` |
 | `EVENT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `dangerous-dogs-index-event-hub` |
 | `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `dangerous-dogs-index-alert` |
 
@@ -53,7 +53,7 @@ All message schemas are fully documented in an [AsyncAPI specification](docs/asy
 
 ### Configuration
 
-These configuration values should be set in the [docker-compose.yaml](docker-compose.yaml) file or Helm [values file](helm/dangerous-dogs-index-events/values.yaml) if running Kubernetes.
+These configuration values should be set in the [docker-compose.yaml](docker-compose.yaml) file or Helm [values file](helm/aphw-ddi-events/values.yaml) if running Kubernetes.
 
 | Name | Description |
 | ---| --- |
@@ -88,7 +88,7 @@ A debugger can be attached to the running application using port `9980`.
 The output of this service is an entry or entries added to the Azure Table Storage tables following receipt of a valid
 event received from the Azure Service Bus subscription.
 
-Use the [AsyncAPI specification](docs/asyncapi.yaml) to obtain a test input and submit to the Azure Service Bus topic, `dangerous-dogs-index-events`.
+Use the [AsyncAPI specification](docs/asyncapi.yaml) to obtain a test input and submit to the Azure Service Bus topic, `aphw-ddi-events`.
 
 You can use the [Azure Storage Explorer](https://azure.microsoft.com/en-gb/features/storage-explorer/) to view the contents of the Azure Table Storage tables.
 

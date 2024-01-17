@@ -1,6 +1,6 @@
 apiVersion: v2
 description: Event log
-name: dangerous-dogs-index-events
+name: aphw-ddi-events
 # this version is automatically updated in the build pipeline
 version: 1.0.0
 dependencies:

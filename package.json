@@ -1,8 +1,8 @@
 {
-  "name": "dangerous-dogs-index-events",
-  "version": "0.1.0",
+  "name": "aphw-ddi-events",
+  "version": "0.2.0",
   "description": "Event log",
-  "homepage": "https://github.com/DEFRA/dangerous-dogs-index-events",
+  "homepage": "https://github.com/DEFRA/aphw-ddi-events",
   "main": "app/index.js",
   "scripts": {
     "pretest": "npm run test:lint",

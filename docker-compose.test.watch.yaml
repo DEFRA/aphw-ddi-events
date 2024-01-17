@@ -1,5 +1,5 @@
 services:
-  dangerous-dogs-index-events:
+  aphw-ddi-events:
     command: >
       sh -c "npm run test:watch"
     volumes:
