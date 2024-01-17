@@ -15,6 +15,6 @@ services:
       - ./jest.config.js:/home/node/jest.config.js
       - ./package.json:/home/node/package.json
 
-  dangerous-dogs-index-event-store-azurite:
+  aphw-ddi-event-store-azurite:
     labels:
       com.docker.compose.pay.role: test
