@@ -79,6 +79,13 @@ The service can be run using the [start](scripts/start) script.
 
 This script accepts any Docker Compose [Up](https://docs.docker.com/engine/reference/commandline/compose_up/) argument.
 
+You will need to have a ```.env``` file in the root of this project with the following contents:
+```
+export MESSAGE_QUEUE_HOST="SNDFFCINFSB1001.servicebus.windows.net"
+export MESSAGE_QUEUE_USER="RootManageSharedAccessKey"
+export MESSAGE_QUEUE_PASSWORD="<replace-with-password-from-service-bus-access-policy>"
+export MESSAGE_QUEUE_SUFFIX="-<replace-with-dev-initials>"
+```
 ### Debugging
 
 A debugger can be attached to the running application using port `9980`.
