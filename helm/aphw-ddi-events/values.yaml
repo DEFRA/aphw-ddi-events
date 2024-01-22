@@ -29,6 +29,7 @@ container:
   requestCpu: 100m
   limitMemory: 200Mi
   limitCpu: 200m
+  port: 3000
   messageQueueHost: namespace.servicebus.windows.net
   eventsTopicAddress: aphw-ddi-events
   eventsSubscriptionAddress: aphw-ddi-event-hub
