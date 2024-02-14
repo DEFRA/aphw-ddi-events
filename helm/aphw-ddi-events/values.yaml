@@ -38,6 +38,27 @@ container:
   azureStorageUseConnectionString: false
   azureStorageAccountName: dangerousdogindex
 
+livenessProbe:
+  path: /healthz
+  port: 3000
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+readinessProbe:
+  path: /healthy
+  port: 3000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+ingress:
+  class: nginx
+  endpoint: aphw-ddi-events
+  server: example.com
+
 aadPodIdentity: true
 
 azureIdentity:
