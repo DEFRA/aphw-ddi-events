@@ -1,5 +1,5 @@
 describe('Events endpoint', () => {
-  const { events: mockEvents } = require('../../../mocks/events')
+  const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 
   const createServer = require('../../../../app/server')
   let server
