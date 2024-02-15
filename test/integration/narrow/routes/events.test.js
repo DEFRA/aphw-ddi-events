@@ -43,6 +43,24 @@ describe('Events endpoint', () => {
     expect(events[3].operation).toBe('updated person')
   })
 
+  test('GET /events?pks=ED1,ED2,ED3 route returns events when multiple pks', async () => {
+    getEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/events?pks=ED1,ED2,ED3'
+    }
+
+    const response = await server.inject(options)
+    const { events } = JSON.parse(response.payload)
+
+    expect(events).toHaveLength(4)
+    expect(events[0].operation).toBe('activity')
+    expect(events[1].operation).toBe('updated dog')
+    expect(events[2].operation).toBe('created cdo')
+    expect(events[3].operation).toBe('updated person')
+  })
+
   test('GET /events route returns 500 if db error', async () => {
     getEvents.mockRejectedValue(new Error('Test error'))
 

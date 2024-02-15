@@ -1,12 +1,16 @@
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 
+const constructQueryText = pks => {
+  const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
+  return queries.join(' or ')
+}
+
 const getEvents = async (pks) => {
   try {
     const client = getClient(EVENT)
 
-    const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
-    const query = queries.join(' or ')
+    const query = constructQueryText(pks)
 
     const entities = client.listEntities({
       queryOptions: { filter: `${query}` }
@@ -24,6 +28,13 @@ const getEvents = async (pks) => {
   }
 }
 
+const translateOldStyleUsername = message => {
+  if (message.username) {
+    message.actioningUser = { username: message.username, displayname: message.username }
+    delete message.username
+  }
+}
+
 const mapEntity = (entity) => {
   const data = JSON.parse(entity.data)
   const message = JSON.parse(data.message)
@@ -38,13 +49,7 @@ const mapEntity = (entity) => {
   return message
 }
 
-const translateOldStyleUsername = message => {
-  if (message.username) {
-    message.actioningUser = { username: message.username, displayname: message.username }
-    delete message.username
-  }
-}
-
 module.exports = {
-  getEvents
+  getEvents,
+  constructQueryText
 }
