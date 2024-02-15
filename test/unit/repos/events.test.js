@@ -25,7 +25,7 @@ describe('Events repo', () => {
   test('getEvents should return events', async () => {
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getEvents('ED1')
+    const events = await getEvents(['ED1'])
 
     expect(events).toHaveLength(4)
   })

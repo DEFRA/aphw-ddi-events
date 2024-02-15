@@ -1,20 +1,27 @@
-const { odata } = require('@azure/data-tables')
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 
-const getEvents = async (pk) => {
-  const client = getClient(EVENT)
+const getEvents = async (pks) => {
+  try {
+    const client = getClient(EVENT)
 
-  const entities = client.listEntities({
-    queryOptions: { filter: odata`PartitionKey eq ${pk}` }
-  })
+    const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
+    const query = queries.join(' or ')
 
-  const results = []
-  for await (const entity of entities) {
-    results.push(mapEntity(entity))
+    const entities = client.listEntities({
+      queryOptions: { filter: `${query}` }
+    })
+
+    const results = []
+    for await (const entity of entities) {
+      results.push(mapEntity(entity))
+    }
+
+    return results
+  } catch (err) {
+    console.log('Error getting events', err.message)
+    throw err
   }
-
-  return results
 }
 
 const mapEntity = (entity) => {

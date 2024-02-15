@@ -13,24 +13,24 @@ describe('Events endpoint', () => {
     await server.initialize()
   })
 
-  test('GET /events/ED1 route returns 200', async () => {
+  test('GET /events?pks=ED1 route returns 200', async () => {
     getEvents.mockResolvedValue(mockEvents)
 
     const options = {
       method: 'GET',
-      url: '/events/ED1'
+      url: '/events?pks=ED1'
     }
 
     const response = await server.inject(options)
     expect(response.statusCode).toBe(200)
   })
 
-  test('GET /events/ED1 route returns events', async () => {
+  test('GET /events?pks=ED1 route returns events', async () => {
     getEvents.mockResolvedValue(mockEvents)
 
     const options = {
       method: 'GET',
-      url: '/events/ED1'
+      url: '/events?pks=ED1'
     }
 
     const response = await server.inject(options)
@@ -48,12 +48,38 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events/ED1'
+      url: '/events?pks=ED1'
     }
 
     const response = await server.inject(options)
 
     expect(response.statusCode).toBe(500)
+  })
+
+  test('GET /events route returns 400 if missing params', async () => {
+    getEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/events'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('GET /events route returns 400 if missing params2', async () => {
+    getEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/events?pks='
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(400)
   })
 
   afterEach(async () => {
