@@ -29,4 +29,10 @@ describe('Events repo', () => {
 
     expect(events).toHaveLength(4)
   })
+
+  test('getEvents should throw if error', async () => {
+    getClient.mockReturnValue()
+
+    await expect(getEvents(['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
+  })
 })
