@@ -125,6 +125,27 @@ The script accepts the following arguments:
 - `--watch/-w` - run tests with file watching to support Test Driven Development scenarios (TDD)
 - `--debug/-d` - run tests in debug mode. Same as watch mode but will wait for a debugger to be attached before running tests.
 
+
+process.env.AZURE_STORAGE_ACCOUNT_NAME = 'devstoreaccount1'
+process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true'
+
+# Running a subset of tests outside of Docker
+In order to run a single test or group of tests, you can use
+```
+npm run test <path>/<filename>
+```
+e.g.
+```
+npm run test owner.test.js
+``` 
+
+However, you will need to copy these lines into your jest.setup.js temporarily, and do not check in any changes to jest.setup.js 
+
+```
+process.env.AZURE_STORAGE_ACCOUNT_NAME = 'devstoreaccount1'
+process.env.AZURE_STORAGE_CONNECTION_STRING = 'UseDevelopmentStorage=true'
+```
+
 ## CI pipeline
 
 This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library).

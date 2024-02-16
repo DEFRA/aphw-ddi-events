@@ -2,6 +2,7 @@ require('./insights').setup()
 require('log-timestamp')
 const { start, stop } = require('./messaging')
 const { initialiseTables } = require('./storage')
+const createServer = require('./server')
 
 process.on(['SIGTERM', 'SIGINT'], async () => {
   await stop()
@@ -11,4 +12,10 @@ process.on(['SIGTERM', 'SIGINT'], async () => {
 module.exports = (async () => {
   await initialiseTables()
   await start()
+  createServer()
+    .then(server => server.start())
+    .catch(err => {
+      console.error(err)
+      process.exit(1)
+    })
 })()
