@@ -1,5 +1,6 @@
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
+const { getPseudonyms } = require('./pseudonyms')
 
 const constructQueryText = pks => {
   const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
@@ -8,6 +9,8 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
+    const pseudonyms = await getPseudonyms()
+
     const client = getClient(EVENT)
 
     const query = constructQueryText(pks)
@@ -18,7 +21,7 @@ const getEvents = async (pks) => {
 
     const results = []
     for await (const entity of entities) {
-      results.push(mapEntity(entity))
+      results.push(mapEntity(entity, pseudonyms))
     }
 
     return results
@@ -35,11 +38,20 @@ const translateOldStyleUsername = message => {
   }
 }
 
-const mapEntity = (entity) => {
+const changeUsernameToPseudonym = (message, pseudonyms) => {
+  if (message.actioningUser?.username) {
+    message.actioningUser = { username: message.username, displayname: message.username }
+    delete message.username
+  }
+}
+
+const mapEntity = (entity, pseudonyms) => {
   const data = JSON.parse(entity.data)
   const message = JSON.parse(data.message)
 
   translateOldStyleUsername(message)
+
+  changeUsernameToPseudonym(message, pseudonyms)
 
   message.timestamp = entity.time
   message.type = entity.type
