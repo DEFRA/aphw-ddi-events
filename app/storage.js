@@ -14,13 +14,13 @@ const initialiseTables = async () => {
     eventClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.eventTable, { allowInsecureConnection: true })
     commentClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.commentTable, { allowInsecureConnection: true })
     warningClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.warningTable, { allowInsecureConnection: true })
-    pseudonymClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.warningTable, { allowInsecureConnection: true })
+    pseudonymClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.pseudonymTable, { allowInsecureConnection: true })
   } else {
     console.log('Using DefaultAzureCredential for Table Client')
     eventClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.eventTable, new DefaultAzureCredential())
     commentClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.commentTable, new DefaultAzureCredential())
     warningClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.warningTable, new DefaultAzureCredential())
-    pseudonymClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.warningTable, new DefaultAzureCredential())
+    pseudonymClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.pseudonymTable, new DefaultAzureCredential())
   }
   console.log('Making sure tables exist')
   await eventClient.createTable(storageConfig.eventTable)

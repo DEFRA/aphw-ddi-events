@@ -7,9 +7,11 @@ const getPseudonyms = async () => {
 
     const entities = client.listEntities()
 
-    const resultMap = Map()
+    const resultMap = new Map()
+
     for await (const entity of entities) {
-      resultMap.add(mapEntity(entity))
+      const [key, value] = mapEntity(entity)
+      resultMap.set(key, value)
     }
 
     return resultMap
@@ -21,14 +23,9 @@ const getPseudonyms = async () => {
 
 const mapEntity = (entity) => {
   const data = JSON.parse(entity.data)
+  const { username, pseudonym } = data
 
-  /*
-  message.timestamp = entity.time
-  message.type = entity.type
-  message.rowKey = entity.rowKey
-  message.subject = entity.subject
-  */
-  return data
+  return [username, pseudonym]
 }
 
 module.exports = {
