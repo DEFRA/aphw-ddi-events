@@ -1,7 +1,7 @@
 const { DefaultAzureCredential } = require('@azure/identity')
 const { TableClient } = require('@azure/data-tables')
 const { storageConfig } = require('./config')
-const { EVENT, COMMENT_EVENT, WARNING_EVENT, PSEUDONYM } = require('./constants/event-types')
+const { EVENT, COMMENT_EVENT, WARNING_EVENT } = require('./constants/event-types')
 
 let eventClient
 let commentClient
@@ -37,14 +37,17 @@ const getClient = (eventType) => {
       return commentClient
     case WARNING_EVENT:
       return warningClient
-    case PSEUDONYM:
-      return pseudonymClient
     default:
       throw new Error(`Unknown event type: ${eventType}`)
   }
 }
 
+const getPseudonymClient = () => {
+  return pseudonymClient
+}
+
 module.exports = {
   initialiseTables,
-  getClient
+  getClient,
+  getPseudonymClient
 }

@@ -1,6 +1,5 @@
 module.exports = {
   EVENT: 'event',
   COMMENT_EVENT: 'comment',
-  WARNING_EVENT: 'warning',
-  PSEUDONYM: 'pseudonym'
+  WARNING_EVENT: 'warning'
 }

@@ -31,28 +31,20 @@ const getEvents = async (pks) => {
   }
 }
 
-const translateOldStyleUsername = message => {
-  if (message.username) {
-    message.actioningUser = { username: message.username, displayname: message.username }
-    delete message.username
-  }
-}
-
-const changeUsernameToPseudonym = (message, pseudonyms) => {
-  if (message.actioningUser?.username) {
-    message.actioningUser = { username: message.username, displayname: message.username }
-    delete message.username
-  }
+const changeUsernameToPseudonym = (username, pseudonyms) => {
+  return pseudonyms.get(username) ?? 'Unknown'
 }
 
 const mapEntity = (entity, pseudonyms) => {
   const data = JSON.parse(entity.data)
   const message = JSON.parse(data.message)
+  const username = message.username ?? message.actioningUser?.username
 
-  translateOldStyleUsername(message)
+  if (message.username) {
+    delete message.username
+  }
 
-  changeUsernameToPseudonym(message, pseudonyms)
-
+  message.actioningUser = { displayname: changeUsernameToPseudonym(username, pseudonyms) }
   message.timestamp = entity.time
   message.type = entity.type
   message.rowKey = entity.rowKey
@@ -63,5 +55,6 @@ const mapEntity = (entity, pseudonyms) => {
 
 module.exports = {
   getEvents,
+  changeUsernameToPseudonym,
   constructQueryText
 }

@@ -1,9 +1,8 @@
-const { PSEUDONYM } = require('../constants/event-types')
-const { getClient } = require('../storage')
+const { getPseudonymClient } = require('../storage')
 
 const getPseudonyms = async () => {
   try {
-    const client = getClient(PSEUDONYM)
+    const client = getPseudonymClient()
 
     const entities = client.listEntities()
 

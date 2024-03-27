@@ -1,9 +1,10 @@
 const { eventsAsyncIterator: mockEventsIterator } = require('../../mocks/events')
+const { pseudonymsAsyncIterator: mockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
 
 describe('Events repo', () => {
-  const { getEvents, constructQueryText } = require('../../../app/repos/events')
+  const { getEvents, constructQueryText, changeUsernameToPseudonym } = require('../../../app/repos/events')
 
-  const { getClient } = require('../../../app/storage')
+  const { getClient, getPseudonymClient } = require('../../../app/storage')
   jest.mock('../../../app/storage')
 
   let tableClient
@@ -24,6 +25,7 @@ describe('Events repo', () => {
 
   test('getEvents should return events', async () => {
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
+    getPseudonymClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockPseudonymsAsyncIterator) })
 
     const events = await getEvents(['ED1'])
 
@@ -50,5 +52,22 @@ describe('Events repo', () => {
     const query = constructQueryText(['ED1', 'ED2', 'ED3'])
 
     expect(query).toBe('PartitionKey eq \'ED1\' or PartitionKey eq \'ED2\' or PartitionKey eq \'ED3\'')
+  })
+
+  describe('changeUsernameToPseudonym', () => {
+    const pseudonymMap = new Map([
+      ['internal-user', 'Hal'],
+      ['martin-smith', 'Joe'],
+      ['jane-doe', 'John'],
+      ['phil-jones', 'Martin']
+    ])
+
+    test('should change username to Pseudonym given one exists', () => {
+      expect(changeUsernameToPseudonym('internal-user', pseudonymMap)).toEqual('Hal')
+    })
+
+    test('should change username to Pseudonym given one exists', () => {
+      expect(changeUsernameToPseudonym('someone', pseudonymMap)).toEqual('Unknown')
+    })
   })
 })
