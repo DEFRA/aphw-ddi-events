@@ -1,9 +1,9 @@
 const { pseudonymsAsyncIterator: mockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
 
 describe('Pseudonyms repo', () => {
-  const { getPseudonyms } = require('../../../app/repos/pseudonyms')
+  const { getPseudonymsAsMap } = require('../../../app/repos/pseudonyms')
 
-  const { getClient } = require('../../../app/storage')
+  const { getPseudonymClient } = require('../../../app/storage')
   jest.mock('../../../app/storage')
 
   let tableClient
@@ -23,7 +23,7 @@ describe('Pseudonyms repo', () => {
   })
 
   test('getPseudonyms should return events', async () => {
-    getClient.mockReturnValue({
+    getPseudonymClient.mockReturnValue({
       createTable: jest.fn(),
       listEntities: jest.fn().mockReturnValue(mockPseudonymsAsyncIterator)
     })
@@ -39,16 +39,17 @@ describe('Pseudonyms repo', () => {
     ]
 
     const expectedMap = new Map(mapEntries)
-    const map = await getPseudonyms()
+    const map = await getPseudonymsAsMap()
 
+    console.log('map', map)
     expect(map.get('internal-user')).toBe('Hal')
     expect(map.size).toBe(4)
     expect(map).toEqual(expectedMap)
   })
 
   test('getPseudonyms should throw if error', async () => {
-    getClient.mockReturnValue()
+    getPseudonymClient.mockReturnValue()
 
-    await expect(getPseudonyms()).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
+    await expect(getPseudonymsAsMap()).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
   })
 })

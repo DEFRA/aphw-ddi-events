@@ -1,11 +1,13 @@
 const { eventsAsyncIterator: mockEventsIterator } = require('../../mocks/events')
-const { pseudonymsAsyncIterator: mockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
 
 describe('Events repo', () => {
   const { getEvents, constructQueryText, changeUsernameToPseudonym } = require('../../../app/repos/events')
 
-  const { getClient, getPseudonymClient } = require('../../../app/storage')
+  const { getClient } = require('../../../app/storage')
   jest.mock('../../../app/storage')
+
+  const { getPseudonymsAsMap } = require('../../../app/repos/pseudonyms')
+  jest.mock('../../../app/repos/pseudonyms')
 
   let tableClient
 
@@ -25,7 +27,7 @@ describe('Events repo', () => {
 
   test('getEvents should return events', async () => {
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
-    getPseudonymClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockPseudonymsAsyncIterator) })
+    getPseudonymsAsMap.mockResolvedValue(new Map())
 
     const events = await getEvents(['ED1'])
 

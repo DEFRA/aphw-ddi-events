@@ -1,6 +1,6 @@
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
-const { getPseudonyms } = require('./pseudonyms')
+const { getPseudonymsAsMap } = require('./pseudonyms')
 
 const constructQueryText = pks => {
   const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
@@ -9,7 +9,7 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
-    const pseudonyms = await getPseudonyms()
+    const pseudonyms = await getPseudonymsAsMap()
 
     const client = getClient(EVENT)
 

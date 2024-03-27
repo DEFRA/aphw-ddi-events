@@ -1,24 +1,28 @@
 
 const pseudonyms = [
   {
+    rowKey: '100',
     data: JSON.stringify({
       username: 'internal-user',
       pseudonym: 'Hal'
     })
   },
   {
+    rowKey: '101',
     data: JSON.stringify({
       username: 'martin-smith',
       pseudonym: 'Joe'
     })
   },
   {
+    rowKey: '102',
     data: JSON.stringify({
       username: 'jane-doe',
       pseudonym: 'John'
     })
   },
   {
+    rowKey: '103',
     data: JSON.stringify({
       username: 'phil-jones',
       pseudonym: 'Martin'

@@ -29,7 +29,7 @@ describe('storage', () => {
     const { initialiseTables } = require('../../../app/storage')
     await initialiseTables()
 
-    expect(tableClient.fromConnectionString).toHaveBeenCalledTimes(3)
+    expect(tableClient.fromConnectionString).toHaveBeenCalledTimes(4)
   })
 
   test('should use DefaultAzureCredential if useConnectionString false', async () => {
@@ -38,8 +38,8 @@ describe('storage', () => {
     const { initialiseTables } = require('../../../app/storage')
     await initialiseTables()
 
-    expect(tableClient).toHaveBeenCalledTimes(3)
-    expect(defaultAzureCredential).toHaveBeenCalledTimes(3)
+    expect(tableClient).toHaveBeenCalledTimes(4)
+    expect(defaultAzureCredential).toHaveBeenCalledTimes(4)
     expect(tableClient.fromConnectionString).not.toHaveBeenCalled()
   })
 
