@@ -41,7 +41,20 @@ const getClient = (eventType) => {
       throw new Error(`Unknown event type: ${eventType}`)
   }
 }
+/**
+ * @typedef {{
+ *   etag: string;
+ *   partitionKey: string;
+ *   rowKey: string;
+ *   data: string;
+ *   timestamp: string;
+ * }} StorageEntity
+ */
 
+/**
+ *
+ * @returns {{ listEntities: () => AsyncIterableIterator<StorageEntity> }}
+ */
 const getPseudonymClient = () => {
   return pseudonymClient
 }

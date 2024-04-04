@@ -37,6 +37,16 @@ const pseudonymsAsyncIterator = (async function * () {
   yield pseudonyms[3]
 })()
 
+const getMockPseudonymsAsyncIterator = () => {
+  return (async function * () {
+    yield pseudonyms[0]
+    yield pseudonyms[1]
+    yield pseudonyms[2]
+    yield pseudonyms[3]
+  })()
+}
+
 module.exports = {
-  pseudonymsAsyncIterator
+  pseudonymsAsyncIterator,
+  getMockPseudonymsAsyncIterator
 }

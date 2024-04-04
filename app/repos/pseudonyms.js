@@ -1,12 +1,32 @@
 const { v4: uuidv4 } = require('uuid')
 const { getPseudonymClient } = require('../storage')
 
+/**
+ * @typedef {{
+ *  rowKey: string,
+ *  data: string
+ *  }} PseudonymEntity
+ */
+
+/**
+ * @typedef {{
+ *  pseudonym: string,
+ *  rowKey: string,
+ *  username: string
+ *  }} MappedEntity
+ */
+
+/**
+ * @returns {Promise<MappedEntity[]>}
+ */
 const getPseudonyms = async () => {
   try {
     const client = getPseudonymClient()
 
     const entities = client.listEntities()
-
+    /**
+     * @type {MappedEntity[]}
+     */
     const results = []
     for await (const entity of entities) {
       results.push(mapEntityAsJson(entity))
@@ -21,14 +41,11 @@ const getPseudonyms = async () => {
 
 const getPseudonymsAsMap = async () => {
   try {
-    const entities = await getPseudonyms()
-
+    const results = await getPseudonyms()
     const resultMap = new Map()
 
-    for (const entity of entities) {
-      console.log('entity', entity)
-      const [key, value] = mapEntity(entity)
-      resultMap.set(key, value)
+    for (const mappedEntity of results) {
+      resultMap.set(mappedEntity.username, mappedEntity.pseudonym)
     }
 
     return resultMap
@@ -38,6 +55,10 @@ const getPseudonymsAsMap = async () => {
   }
 }
 
+/**
+ * @param {PseudonymEntity} entity
+ * @returns {[string, string, string]}
+ */
 const mapEntity = (entity) => {
   const data = JSON.parse(entity.data)
   const { username, pseudonym } = data
@@ -45,6 +66,10 @@ const mapEntity = (entity) => {
   return [username, pseudonym, entity.rowKey]
 }
 
+/**
+ * @param {PseudonymEntity} entity
+ * @returns {MappedEntity}
+ */
 const mapEntityAsJson = (entity) => {
   const mapped = mapEntity(entity)
   return {
@@ -54,6 +79,10 @@ const mapEntityAsJson = (entity) => {
   }
 }
 
+/**
+ * @param {{username: string; pseudonym: string}} user
+ * @returns {{partitionKey: string, data: string, rowKey: string}}
+ */
 const createRow = (user) => {
   return {
     partitionKey: 'pseudonym',
@@ -62,6 +91,10 @@ const createRow = (user) => {
   }
 }
 
+/**
+ * @param {{username: string; pseudonym: string}} payload
+ * @returns {Promise<void>}
+ */
 const addUser = async (payload) => {
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
   const client = getPseudonymClient()
