@@ -3,19 +3,22 @@ const { getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUser } = req
 
 jest.mock('../../../app/storage')
 const { getPseudonymClient } = require('../../../app/storage')
+const { DuplicateResourceError } = require('../../../app/errors/duplicateResourceError')
+const { ResourceNotFoundError } = require('../../../app/errors/resourceNotFound')
 
 describe('Pseudonyms repo', () => {
   let tableClient
   const entityClient = jest.fn()
   const listEntitiesMock = jest.fn(() => getMockPseudonymsAsyncIterator())
+  const deleteEntityMock = jest.fn()
 
   beforeEach(() => {
     getPseudonymClient.mockReturnValue({
       createTable: jest.fn(),
       createEntity: entityClient,
-      listEntities: listEntitiesMock
+      listEntities: listEntitiesMock,
+      deleteEntity: deleteEntityMock
     })
-
     jest.mock('@azure/data-tables')
 
     tableClient = require('@azure/data-tables').TableClient
@@ -128,6 +131,18 @@ describe('Pseudonyms repo', () => {
         pseudonym: 'Rod'
       })
     })
+
+    test('should throw a DuplicateResourceError given username already exists', async () => {
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+      })
+
+      await expect(addUser({
+        username: 'jane-doe',
+        pseudonym: 'John'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe'))
+    })
   })
 
   describe('findUser', () => {
@@ -146,7 +161,11 @@ describe('Pseudonyms repo', () => {
   })
   describe('removeUser', () => {
     test('should remove user', async () => {
-      await removeUser('Cassie.Bartell71')
+      await removeUser('jane-doe')
+      expect(deleteEntityMock).toBeCalledWith('pseudonym', '102')
+    })
+    test('should return a DuplicateResourceError given user does not exist', async () => {
+      await expect(removeUser('Cassie.Bartell71')).rejects.toThrow(ResourceNotFoundError)
     })
   })
 })

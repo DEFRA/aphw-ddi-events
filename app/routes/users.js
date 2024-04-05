@@ -1,5 +1,6 @@
 const { getPseudonyms, addUser, removeUser } = require('../repos/pseudonyms')
 const { ResourceNotFoundError } = require('../errors/resourceNotFound')
+const { DuplicateResourceError } = require('../errors/duplicateResourceError')
 
 module.exports = [{
   method: 'GET',
@@ -19,9 +20,17 @@ module.exports = [{
     if (!request.payload?.username || !request.payload?.pseudonym) {
       return h.response().code(400)
     }
-    const result = await addUser(request.payload)
 
-    return h.response(result).code(200)
+    try {
+      const result = await addUser(request.payload)
+
+      return h.response(result).code(200)
+    } catch (e) {
+      if (e instanceof DuplicateResourceError) {
+        return h.response(e.message).code(409)
+      }
+      throw e
+    }
   }
 },
 {

@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
 const { getPseudonymClient } = require('../storage')
+const { DuplicateResourceError } = require('../errors/duplicateResourceError')
+const { ResourceNotFoundError } = require('../errors/resourceNotFound')
 
 /**
  * @typedef {{
@@ -119,6 +121,12 @@ const findUser = async (username) => {
  * @returns {Promise<void>}
  */
 const addUser = async (payload) => {
+  const foundUser = await findUser(payload.username)
+
+  if (foundUser !== undefined) {
+    throw new DuplicateResourceError(`Resource already found with username ${payload.username}`)
+  }
+
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
   const client = getPseudonymClient()
   await client.createEntity(entity)
@@ -128,7 +136,14 @@ const addUser = async (payload) => {
 }
 
 const removeUser = async (username) => {
+  const foundUser = await findUser(username)
 
+  if (foundUser === undefined) {
+    throw new ResourceNotFoundError(`Resource not found with username ${username}`)
+  }
+
+  const client = getPseudonymClient()
+  await client.deleteEntity('pseudonym', foundUser.rowKey)
 }
 
 module.exports = {

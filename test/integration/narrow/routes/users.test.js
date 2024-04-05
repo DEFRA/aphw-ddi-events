@@ -102,6 +102,22 @@ describe('Users endpoint', () => {
       expect(response.payload).toBe('Username already exists')
     })
 
+    test('POST /users route returns 500 given server error', async () => {
+      addUser.mockRejectedValue(new Error('some error'))
+
+      const options = {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'internal-system',
+          pseudonym: 'Hal 3000'
+        }
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(500)
+    })
+
     test('POST /users route returns 400 given no username exists', async () => {
       const options = {
         method: 'POST',
