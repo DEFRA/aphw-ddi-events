@@ -106,7 +106,7 @@ const createRow = (user) => {
 
 /**
  * @param {string} username
- * @returns {undefined|MappedEntity}
+ * @returns {Promise<undefined|MappedEntity>}
  */
 const findUser = async (username) => {
   const results = await getPseudonyms()
@@ -118,7 +118,7 @@ const findUser = async (username) => {
 
 /**
  * @param {{username: string; pseudonym: string}} payload
- * @returns {Promise<void>}
+ * @returns {Promise<MappedEntity>}
  */
 const addUser = async (payload) => {
   const foundUser = await findUser(payload.username)
