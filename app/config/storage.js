@@ -6,7 +6,8 @@ const schema = Joi.object({
   account: Joi.string().required(),
   eventTable: Joi.string().default('events'),
   commentTable: Joi.string().default('comments'),
-  warningTable: Joi.string().default('warnings')
+  warningTable: Joi.string().default('warnings'),
+  pseudonymTable: Joi.string().default('pseudonyms')
 })
 
 const config = {
@@ -15,7 +16,8 @@ const config = {
   account: process.env.AZURE_STORAGE_ACCOUNT_NAME,
   eventTable: process.env.AZURE_STORAGE_EVENT_TABLE,
   commentTable: process.env.AZURE_STORAGE_COMMENT_TABLE,
-  warningTable: process.env.AZURE_STORAGE_WARNING_TABLE
+  warningTable: process.env.AZURE_STORAGE_WARNING_TABLE,
+  pseudonymTable: process.env.AZURE_STORAGE_PSEUDONYM_TABLE
 }
 
 const result = schema.validate(config, {

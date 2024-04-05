@@ -1,5 +1,6 @@
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
+const { getPseudonymsAsMap } = require('./pseudonyms')
 
 const constructQueryText = pks => {
   const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
@@ -8,6 +9,8 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
+    const pseudonyms = await getPseudonymsAsMap()
+
     const client = getClient(EVENT)
 
     const query = constructQueryText(pks)
@@ -18,7 +21,7 @@ const getEvents = async (pks) => {
 
     const results = []
     for await (const entity of entities) {
-      results.push(mapEntity(entity))
+      results.push(mapEntity(entity, pseudonyms))
     }
 
     return results
@@ -28,19 +31,20 @@ const getEvents = async (pks) => {
   }
 }
 
-const translateOldStyleUsername = message => {
-  if (message.username) {
-    message.actioningUser = { username: message.username, displayname: message.username }
-    delete message.username
-  }
+const changeUsernameToPseudonym = (username, pseudonyms) => {
+  return pseudonyms.get(username) ?? 'Index user'
 }
 
-const mapEntity = (entity) => {
+const mapEntity = (entity, pseudonyms) => {
   const data = JSON.parse(entity.data)
   const message = JSON.parse(data.message)
+  const username = message.username ?? message.actioningUser?.username
 
-  translateOldStyleUsername(message)
+  if (message.username) {
+    delete message.username
+  }
 
+  message.actioningUser = { displayname: changeUsernameToPseudonym(username, pseudonyms) }
   message.timestamp = entity.time
   message.type = entity.type
   message.rowKey = entity.rowKey
@@ -51,5 +55,6 @@ const mapEntity = (entity) => {
 
 module.exports = {
   getEvents,
+  changeUsernameToPseudonym,
   constructQueryText
 }
