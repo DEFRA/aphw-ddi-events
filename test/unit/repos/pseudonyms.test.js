@@ -1,15 +1,17 @@
 const { getMockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
-const { getPseudonyms, getPseudonymsAsMap } = require('../../../app/repos/pseudonyms')
+const { getPseudonyms, getPseudonymsAsMap, addUser, removeUser } = require('../../../app/repos/pseudonyms')
 
 jest.mock('../../../app/storage')
 const { getPseudonymClient } = require('../../../app/storage')
 
 describe('Pseudonyms repo', () => {
   let tableClient
+  const entityClient = jest.fn()
 
   beforeEach(() => {
     getPseudonymClient.mockReturnValue({
       createTable: jest.fn(),
+      createEntity: entityClient,
       listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
     })
 
@@ -65,6 +67,7 @@ describe('Pseudonyms repo', () => {
         ['phil-jones', 'Martin']
       ]
 
+      // eslint-disable-next-line no-undef
       const expectedMap = new Map(mapEntries)
       const map = await getPseudonymsAsMap()
 
@@ -78,6 +81,51 @@ describe('Pseudonyms repo', () => {
       getPseudonymClient.mockReturnValue()
 
       await expect(getPseudonymsAsMap()).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
+    })
+  })
+
+  describe('addUser', () => {
+    test('should add user', async () => {
+      const createEntityMock = jest.fn(() => ({
+        clientRequestId: '67524846-c07f-4300-b1c2-c08522ccff21',
+        requestId: '45566956-d6fe-4499-ac39-8fdc81e7aebf',
+        version: '2022-11-02',
+        date: '2024-04-05T07:20:00.000Z',
+        etag: "W/\"datetime'2024-04-05T07%3A20%3A00.6999361Z'\"",
+        preferenceApplied: 'return-no-content',
+        contentType: 'application/json;odata=minimalmetadata'
+      }))
+
+      const getEntityMock = jest.fn((_pseudonym, _rowKey) => ({
+        'odata.metadata': 'http://aphw-ddi-event-store-azurite:10002/devstoreaccount1/$metadata#pseudonyms/@Element',
+        etag: 'W/"datetime\'2024-04-05T07%3A26%3A47.1373605Z\'"',
+        partitionKey: 'pseudonym',
+        rowKey: '11a24722-2766-4dd7-ac5c-ec0d44602170',
+        data: '{"username":"Cassie.Bartell71","pseudonym":"Rod"}',
+        timestamp: '2024-04-05T07:26:47.1373605Z'
+      }))
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator()),
+        createEntity: createEntityMock,
+        getEntity: getEntityMock
+      })
+
+      const user = await addUser({
+        username: 'Cassie.Bartell71',
+        pseudonym: 'Rod'
+      })
+      expect(createEntityMock).toBeCalledWith({
+        partitionKey: 'pseudonym',
+        rowKey: expect.any(String),
+        data: '{"username":"Cassie.Bartell71","pseudonym":"Rod"}'
+      })
+      expect(getEntityMock).toBeCalledWith('pseudonym', expect.any(String))
+      expect(user).toEqual({
+        rowKey: expect.any(String),
+        username: 'Cassie.Bartell71',
+        pseudonym: 'Rod'
+      })
     })
   })
 })

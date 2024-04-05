@@ -80,6 +80,17 @@ const mapEntityAsJson = (entity) => {
 }
 
 /**
+ * @typedef {{
+ *   'odata.metadata': 'http://storage',
+ *   etag: 'W/"datetime\'2024-04-05T07%3A26%3A47.1373605Z\'"',
+ *   partitionKey: 'pseudonym',
+ *   rowKey: '11a24722-2766-4dd7-ac5c-ec0d44602170',
+ *   data: '{"username":"Cassie.Bartell71","pseudonym":"Rod"}',
+ *   timestamp: '2024-04-05T07:26:47.1373605Z'
+ * }} GetEntityDto
+ */
+
+/**
  * @param {{username: string; pseudonym: string}} user
  * @returns {{partitionKey: string, data: string, rowKey: string}}
  */
@@ -99,6 +110,9 @@ const addUser = async (payload) => {
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
   const client = getPseudonymClient()
   await client.createEntity(entity)
+
+  const createdEntity = await client.getEntity('pseudonym', entity.rowKey)
+  return mapEntityAsJson(createdEntity)
 }
 
 const removeUser = async (username) => {

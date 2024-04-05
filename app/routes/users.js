@@ -1,4 +1,5 @@
 const { getPseudonyms, addUser, removeUser } = require('../repos/pseudonyms')
+const { ResourceNotFoundError } = require('../errors/resourceNotFound')
 
 module.exports = [{
   method: 'GET',
@@ -18,7 +19,6 @@ module.exports = [{
     if (!request.payload?.username || !request.payload?.pseudonym) {
       return h.response().code(400)
     }
-
     const result = await addUser(request.payload)
 
     return h.response(result).code(200)
@@ -28,12 +28,15 @@ module.exports = [{
   method: 'DELETE',
   path: '/users/{username}',
   handler: async (request, h) => {
-    if (!request.params.username) {
-      return h.response().code(400)
+    try {
+      await removeUser(request.params.username)
+    } catch (e) {
+      if (e instanceof ResourceNotFoundError) {
+        return h.response(e.message).code(404)
+      }
+      throw e
     }
 
-    const result = await removeUser(request.params.username)
-
-    return h.response(result).code(200)
+    return h.response().code(204)
   }
 }]
