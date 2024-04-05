@@ -1,4 +1,4 @@
-// const { ResourceNotFoundError } = require('../../../../app/errors/resourceNotFound')
+const { ResourceNotFoundError } = require('../../../../app/errors/resourceNotFound')
 
 describe('Users endpoint', () => {
   const { users: mockUsers } = require('../../../mocks/users')
@@ -7,7 +7,7 @@ describe('Users endpoint', () => {
   let server
 
   jest.mock('../../../../app/repos/pseudonyms')
-  const { getPseudonyms, addUser } = require('../../../../app/repos/pseudonyms')
+  const { getPseudonyms, addUser, removeUser } = require('../../../../app/repos/pseudonyms')
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -111,55 +111,55 @@ describe('Users endpoint', () => {
     })
   })
 
-  // describe('DELETE /users', () => {
-  //   test('DELETE /users returns a 204', async () => {
-  //     const options = {
-  //       method: 'DELETE',
-  //       url: '/users/Cassie.Bartell71'
-  //     }
-  //
-  //     const response = await server.inject(options)
-  //     expect(response.statusCode).toBe(204)
-  //     expect(response.payload).toBe('')
-  //     expect(removeUser).toBeCalledWith('Cassie.Bartell71')
-  //   })
-  //
-  //   test('DELETE /users returns a 404 given username does not exist', async () => {
-  //     removeUser.mockRejectedValue(new ResourceNotFoundError('Username not found'))
-  //     const options = {
-  //       method: 'DELETE',
-  //       url: '/users/Cassie.Bartell71'
-  //     }
-  //
-  //     const response = await server.inject(options)
-  //     expect(response.statusCode).toBe(404)
-  //     expect(removeUser).toBeCalledWith('Cassie.Bartell71')
-  //     expect(response.payload).toBe('Username not found')
-  //   })
-  //
-  //   test('DELETE /users returns a 500 given server error is thrown', async () => {
-  //     removeUser.mockRejectedValue(new Error('Server errro'))
-  //     const options = {
-  //       method: 'DELETE',
-  //       url: '/users/Cassie.Bartell71'
-  //     }
-  //
-  //     const response = await server.inject(options)
-  //     expect(response.statusCode).toBe(500)
-  //     expect(removeUser).toBeCalledWith('Cassie.Bartell71')
-  //   })
-  //
-  //   test('DELETE /users returns a 404 given username is missing', async () => {
-  //     const options = {
-  //       method: 'DELETE',
-  //       url: '/users'
-  //     }
-  //
-  //     const response = await server.inject(options)
-  //     expect(response.statusCode).toBe(404)
-  //     expect(removeUser).not.toHaveBeenCalled()
-  //   })
-  // })
+  describe('DELETE /users', () => {
+    test('DELETE /users returns a 204', async () => {
+      const options = {
+        method: 'DELETE',
+        url: '/users/Cassie.Bartell71'
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(204)
+      expect(response.payload).toBe('')
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+    })
+
+    test('DELETE /users returns a 404 given username does not exist', async () => {
+      removeUser.mockRejectedValue(new ResourceNotFoundError('Username not found'))
+      const options = {
+        method: 'DELETE',
+        url: '/users/Cassie.Bartell71'
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(404)
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+      expect(response.payload).toBe('Username not found')
+    })
+
+    test('DELETE /users returns a 500 given server error is thrown', async () => {
+      removeUser.mockRejectedValue(new Error('Server errro'))
+      const options = {
+        method: 'DELETE',
+        url: '/users/Cassie.Bartell71'
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(500)
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+    })
+
+    test('DELETE /users returns a 404 given username is missing', async () => {
+      const options = {
+        method: 'DELETE',
+        url: '/users'
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(404)
+      expect(removeUser).not.toHaveBeenCalled()
+    })
+  })
 
   afterEach(async () => {
     await server.stop()

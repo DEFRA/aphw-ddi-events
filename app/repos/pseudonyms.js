@@ -103,6 +103,18 @@ const createRow = (user) => {
 }
 
 /**
+ * @param {string} username
+ * @returns {undefined|MappedEntity}
+ */
+const findUser = async (username) => {
+  const results = await getPseudonyms()
+
+  return results.find(result => {
+    return username === result.username
+  })
+}
+
+/**
  * @param {{username: string; pseudonym: string}} payload
  * @returns {Promise<void>}
  */
@@ -123,5 +135,6 @@ module.exports = {
   getPseudonyms,
   getPseudonymsAsMap,
   addUser,
-  removeUser
+  removeUser,
+  findUser
 }

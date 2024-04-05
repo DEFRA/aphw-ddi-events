@@ -1,5 +1,5 @@
 const { getMockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
-const { getPseudonyms, getPseudonymsAsMap, addUser, removeUser } = require('../../../app/repos/pseudonyms')
+const { getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUser } = require('../../../app/repos/pseudonyms')
 
 jest.mock('../../../app/storage')
 const { getPseudonymClient } = require('../../../app/storage')
@@ -7,12 +7,13 @@ const { getPseudonymClient } = require('../../../app/storage')
 describe('Pseudonyms repo', () => {
   let tableClient
   const entityClient = jest.fn()
+  const listEntitiesMock = jest.fn(() => getMockPseudonymsAsyncIterator())
 
   beforeEach(() => {
     getPseudonymClient.mockReturnValue({
       createTable: jest.fn(),
       createEntity: entityClient,
-      listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+      listEntities: listEntitiesMock
     })
 
     jest.mock('@azure/data-tables')
@@ -126,6 +127,26 @@ describe('Pseudonyms repo', () => {
         username: 'Cassie.Bartell71',
         pseudonym: 'Rod'
       })
+    })
+  })
+
+  describe('findUser', () => {
+    test('should find a user given user exists', async () => {
+      const user = await findUser('jane-doe')
+      expect(user).toEqual({
+        rowKey: '102',
+        username: 'jane-doe',
+        pseudonym: 'John'
+      })
+    })
+    test('should find a user given user exists', async () => {
+      const user = await findUser('jane-doe-2')
+      expect(user).toEqual(undefined)
+    })
+  })
+  describe('removeUser', () => {
+    test('should remove user', async () => {
+      await removeUser('Cassie.Bartell71')
     })
   })
 })
