@@ -69,7 +69,7 @@ describe('Events repo', () => {
     })
 
     test('should change username to Pseudonym given one exists', () => {
-      expect(changeUsernameToPseudonym('someone', pseudonymMap)).toEqual('Unknown')
+      expect(changeUsernameToPseudonym('someone', pseudonymMap)).toEqual('Index user')
     })
   })
 })

@@ -32,7 +32,7 @@ const getEvents = async (pks) => {
 }
 
 const changeUsernameToPseudonym = (username, pseudonyms) => {
-  return pseudonyms.get(username) ?? 'Unknown'
+  return pseudonyms.get(username) ?? 'Index user'
 }
 
 const mapEntity = (entity, pseudonyms) => {
