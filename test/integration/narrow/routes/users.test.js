@@ -1,4 +1,5 @@
 const { ResourceNotFoundError } = require('../../../../app/errors/resourceNotFound')
+const { DuplicateResourceError } = require('../../../../app/errors/duplicateResourceError')
 
 describe('Users endpoint', () => {
   const { users: mockUsers } = require('../../../mocks/users')
@@ -82,6 +83,23 @@ describe('Users endpoint', () => {
       const user = JSON.parse(response.payload)
 
       expect(user).toEqual(returnedUser)
+    })
+
+    test('POST /users route returns 409 given username already exists', async () => {
+      addUser.mockRejectedValue(new DuplicateResourceError('Username already exists'))
+
+      const options = {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'internal-system',
+          pseudonym: 'Hal 3000'
+        }
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(409)
+      expect(response.payload).toBe('Username already exists')
     })
 
     test('POST /users route returns 400 given no username exists', async () => {
