@@ -17,6 +17,18 @@ describe('auth getCallingUser', () => {
     expect(result.username).toBe(MOCK_USERNAME)
     expect(result.displayname).toBe(MOCK_DISPLAYNAME)
   })
+
+  test('should return blank username and blank displayname if headers are missing', () => {
+    request = {
+      headers: {
+      }
+    }
+
+    const result = getCallingUser(request)
+
+    expect(result.username).toBe('')
+    expect(result.displayname).toBe('')
+  })
 })
 
 describe('auth isUserValid', () => {

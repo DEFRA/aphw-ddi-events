@@ -1,5 +1,4 @@
 const getCallingUser = (request) => {
-  console.log('headers', request?.headers)
   return {
     username: request?.headers?.['ddi-username'] ?? '',
     displayname: request?.headers?.['ddi-displayname'] ?? ''
