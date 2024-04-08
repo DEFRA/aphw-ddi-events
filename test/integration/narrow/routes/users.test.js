@@ -1,17 +1,26 @@
 const { ResourceNotFoundError } = require('../../../../app/errors/resourceNotFound')
 const { DuplicateResourceError } = require('../../../../app/errors/duplicateResourceError')
 
+const validUser = {
+  username: 'valid-user',
+  displayname: 'Valid User'
+}
+
 describe('Users endpoint', () => {
   const { users: mockUsers } = require('../../../mocks/users')
 
   const createServer = require('../../../../app/server')
   let server
 
+  jest.mock('../../../../app/auth/get-user')
+  const { getCallingUser } = require('../../../../app/auth/get-user')
+
   jest.mock('../../../../app/repos/pseudonyms')
   const { getPseudonyms, addUser, removeUser } = require('../../../../app/repos/pseudonyms')
 
   beforeEach(async () => {
     jest.clearAllMocks()
+    getCallingUser.mockReturnValue(validUser)
     server = await createServer()
     await server.initialize()
   })
@@ -78,7 +87,7 @@ describe('Users endpoint', () => {
       expect(addUser).toBeCalledWith({
         username: 'internal-system',
         pseudonym: 'Hal 3000'
-      })
+      }, validUser)
 
       const user = JSON.parse(response.payload)
 
@@ -155,7 +164,7 @@ describe('Users endpoint', () => {
       const response = await server.inject(options)
       expect(response.statusCode).toBe(204)
       expect(response.payload).toBe('')
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
     })
 
     test('DELETE /users returns a 404 given username does not exist', async () => {
@@ -167,7 +176,7 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(404)
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
       expect(response.payload).toBe('Username not found')
     })
 
@@ -180,7 +189,7 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(500)
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71')
+      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
     })
 
     test('DELETE /users returns a 404 given username is missing', async () => {
