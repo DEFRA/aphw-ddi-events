@@ -1,4 +1,4 @@
-const { getPseudonyms, addUser, removeUser } = require('../repos/pseudonyms')
+const { getPseudonyms, addUser, removeUser, addUserPreflightCheck } = require('../repos/pseudonyms')
 const { ResourceNotFoundError } = require('../errors/resourceNotFound')
 const { DuplicateResourceError } = require('../errors/duplicateResourceError')
 
@@ -27,7 +27,36 @@ module.exports = [{
       return h.response(result).code(200)
     } catch (e) {
       if (e instanceof DuplicateResourceError) {
-        return h.response(e.message).code(409)
+        const message = e.message.includes('Resource already found with pseudonym') ? 'Pseudonym already exists' : 'Username already exists'
+        return h.response({
+          error: message,
+          message,
+          statusCode: 409
+        }).code(409)
+      }
+      throw e
+    }
+  }
+},
+{
+  method: 'OPTIONS',
+  path: '/users',
+  handler: async (request, h) => {
+    if (!request.payload?.username || !request.payload?.pseudonym) {
+      return h.response().code(400)
+    }
+
+    try {
+      await addUserPreflightCheck(request.payload)
+
+      return h.response().code(200)
+    } catch (e) {
+      if (e instanceof DuplicateResourceError) {
+        return h.response({
+          error: 'Username already exists',
+          message: 'Username already exists',
+          statusCode: 409
+        }).code(409)
       }
       throw e
     }

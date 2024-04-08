@@ -1,5 +1,7 @@
 const { getMockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
-const { getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUser } = require('../../../app/repos/pseudonyms')
+const {
+  getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck
+} = require('../../../app/repos/pseudonyms')
 
 jest.mock('../../../app/storage')
 const { getPseudonymClient } = require('../../../app/storage')
@@ -145,20 +147,80 @@ describe('Pseudonyms repo', () => {
     })
   })
 
-  describe('findUser', () => {
+  describe('addUserPreflightCheck', () => {
+    test('should succeed if user does not exist', async () => {
+      const createEntityMock = jest.fn(() => ({
+        clientRequestId: '67524846-c07f-4300-b1c2-c08522ccff21',
+        requestId: '45566956-d6fe-4499-ac39-8fdc81e7aebf',
+        version: '2022-11-02',
+        date: '2024-04-05T07:20:00.000Z',
+        etag: "W/\"datetime'2024-04-05T07%3A20%3A00.6999361Z'\"",
+        preferenceApplied: 'return-no-content',
+        contentType: 'application/json;odata=minimalmetadata'
+      }))
+
+      const getEntityMock = jest.fn((_pseudonym, _rowKey) => ({
+        'odata.metadata': 'http://aphw-ddi-event-store-azurite:10002/devstoreaccount1/$metadata#pseudonyms/@Element',
+        etag: 'W/"datetime\'2024-04-05T07%3A26%3A47.1373605Z\'"',
+        partitionKey: 'pseudonym',
+        rowKey: '11a24722-2766-4dd7-ac5c-ec0d44602170',
+        data: '{"username":"Cassie.Bartell71","pseudonym":"Rod"}',
+        timestamp: '2024-04-05T07:26:47.1373605Z'
+      }))
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator()),
+        createEntity: createEntityMock,
+        getEntity: getEntityMock
+      })
+
+      await addUserPreflightCheck({
+        username: 'Cassie.Bartell71',
+        pseudonym: 'Rod'
+      })
+      expect(createEntityMock).not.toHaveBeenCalled()
+    })
+
+    test('should throw a DuplicateResourceError given username already exists', async () => {
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+      })
+
+      await expect(addUserPreflightCheck({
+        username: 'jane-doe',
+        pseudonym: 'John'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe'))
+    })
+
+    test('should throw a DuplicateResourceError given pseudonym already exists', async () => {
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+      })
+
+      await expect(addUserPreflightCheck({
+        username: 'jane-doe-2',
+        pseudonym: 'John'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John'))
+    })
+  })
+
+  describe('findUserByUsername', () => {
     test('should find a user given user exists', async () => {
-      const user = await findUser('jane-doe')
+      const user = await findUserByUsername('jane-doe')
       expect(user).toEqual({
         rowKey: '102',
         username: 'jane-doe',
         pseudonym: 'John'
       })
     })
-    test('should find a user given user exists', async () => {
-      const user = await findUser('jane-doe-2')
+    test('should return undefined given user does not exist', async () => {
+      const user = await findUserByUsername('jane-doe-2')
       expect(user).toEqual(undefined)
     })
   })
+
   describe('removeUser', () => {
     test('should remove user', async () => {
       await removeUser('jane-doe')

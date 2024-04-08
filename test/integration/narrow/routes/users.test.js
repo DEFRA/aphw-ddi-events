@@ -8,7 +8,7 @@ describe('Users endpoint', () => {
   let server
 
   jest.mock('../../../../app/repos/pseudonyms')
-  const { getPseudonyms, addUser, removeUser } = require('../../../../app/repos/pseudonyms')
+  const { getPseudonyms, addUser, removeUser, addUserPreflightCheck } = require('../../../../app/repos/pseudonyms')
 
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -52,6 +52,49 @@ describe('Users endpoint', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).toBe(500)
+    })
+  })
+
+  describe('OPTIONS users', () => {
+    test('OPTIONS /users route returns 200', async () => {
+      const options = {
+        method: 'OPTIONS',
+        url: '/users',
+        payload: {
+          username: 'internal-system',
+          pseudonym: 'Hal 3000'
+        }
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(200)
+      expect(addUserPreflightCheck).toBeCalledWith({
+        username: 'internal-system',
+        pseudonym: 'Hal 3000'
+      })
+
+      expect(response.payload).toEqual('')
+    })
+
+    test('OPTIONS /users route returns 409 given username already exists', async () => {
+      addUserPreflightCheck.mockRejectedValue(new DuplicateResourceError('Username already exists'))
+
+      const options = {
+        method: 'OPTIONS',
+        url: '/users',
+        payload: {
+          username: 'internal-system',
+          pseudonym: 'Hal 3000'
+        }
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(409)
+      expect(JSON.parse(response.payload)).toEqual({
+        statusCode: 409,
+        error: 'Username already exists',
+        message: 'Username already exists'
+      })
     })
   })
 
@@ -99,7 +142,32 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(409)
-      expect(response.payload).toBe('Username already exists')
+      expect(JSON.parse(response.payload)).toEqual({
+        statusCode: 409,
+        error: 'Username already exists',
+        message: 'Username already exists'
+      })
+    })
+
+    test('POST /users route returns 409 given pseudonym already exists', async () => {
+      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with pseudonym John'))
+
+      const options = {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'internal-system',
+          pseudonym: 'Hal 3000'
+        }
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(409)
+      expect(JSON.parse(response.payload)).toEqual({
+        statusCode: 409,
+        error: 'Pseudonym already exists',
+        message: 'Pseudonym already exists'
+      })
     })
 
     test('POST /users route returns 500 given server error', async () => {

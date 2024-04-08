@@ -108,7 +108,7 @@ const createRow = (user) => {
  * @param {string} username
  * @returns {Promise<undefined|MappedEntity>}
  */
-const findUser = async (username) => {
+const findUserByUsername = async (username) => {
   const results = await getPseudonyms()
 
   return results.find(result => {
@@ -121,11 +121,7 @@ const findUser = async (username) => {
  * @returns {Promise<MappedEntity>}
  */
 const addUser = async (payload) => {
-  const foundUser = await findUser(payload.username)
-
-  if (foundUser !== undefined) {
-    throw new DuplicateResourceError(`Resource already found with username ${payload.username}`)
-  }
+  await addUserPreflightCheck(payload)
 
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
   const client = getPseudonymClient()
@@ -135,8 +131,22 @@ const addUser = async (payload) => {
   return mapEntityAsJson(createdEntity)
 }
 
+const addUserPreflightCheck = async (payload) => {
+  const results = await getPseudonyms()
+
+  results.some(result => {
+    if (payload.username === result.username) {
+      throw new DuplicateResourceError(`Resource already found with username ${payload.username}`)
+    }
+    if (payload.pseudonym === result.pseudonym) {
+      throw new DuplicateResourceError(`Resource already found with pseudonym ${payload.pseudonym}`)
+    }
+    return false
+  })
+}
+
 const removeUser = async (username) => {
-  const foundUser = await findUser(username)
+  const foundUser = await findUserByUsername(username)
 
   if (foundUser === undefined) {
     throw new ResourceNotFoundError(`Resource not found with username ${username}`)
@@ -149,7 +159,8 @@ const removeUser = async (username) => {
 module.exports = {
   getPseudonyms,
   getPseudonymsAsMap,
+  addUserPreflightCheck,
   addUser,
   removeUser,
-  findUser
+  findUserByUsername
 }
