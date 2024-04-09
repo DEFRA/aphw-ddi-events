@@ -154,7 +154,7 @@ const addUserPreflightCheck = async (payload) => {
 }
 
 const removeUser = async (username, callingUser) => {
-  const foundUser = await findUser(username)
+  const foundUser = await findUserByUsername(username)
 
   if (foundUser === undefined) {
     throw new ResourceNotFoundError(`Resource not found with username ${username}`)

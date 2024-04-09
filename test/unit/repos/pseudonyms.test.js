@@ -212,7 +212,7 @@ describe('Pseudonyms repo', () => {
       await expect(addUserPreflightCheck({
         username: 'jane-doe-2',
         pseudonym: 'John'
-      }.rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John.'))))
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John.'))
     })
 
     test('should throw a DuplicateResourceError with details given both username and pseudonym already exists', async () => {
