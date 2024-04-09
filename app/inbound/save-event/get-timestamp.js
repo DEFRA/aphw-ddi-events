@@ -1,5 +1,10 @@
 const getTimestamp = (eventTime) => {
-  return new Date(eventTime).getTime()
+  let timestampTime = eventTime
+
+  if (isNaN(timestampTime)) {
+    timestampTime = new Date()
+  }
+  return new Date(timestampTime).getTime()
 }
 
 module.exports = {

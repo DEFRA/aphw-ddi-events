@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid')
 const { PSEUDONYM } = require('../constants/entity-names')
 const { ADMIN_EVENT_PREFIX } = require('../constants/event-prefixes')
 const { saveEvent } = require('../inbound/save-event/event')
@@ -13,10 +14,21 @@ const auditRemove = async (entityName, details, callingUser) => {
   await saveEvent(event)
 }
 
+/**
+ * @param entityName
+ * @param details
+ * @param callingUser
+ * @returns {ValidEvent}
+ */
 const constructEventForAdd = (entityName, details, callingUser) => {
   validateUserAndEntity(callingUser, entityName)
 
+  /**
+   * @type {ValidEvent}
+   */
   const event = {
+    id: uuidv4(),
+    time: new Date(),
     partitionKey: `${ADMIN_EVENT_PREFIX}${entityName}`,
     subject: 'DDI Admin Add Pseudonym',
     data: JSON.stringify({
@@ -34,10 +46,21 @@ const constructEventForAdd = (entityName, details, callingUser) => {
   return event
 }
 
+/**
+ * @param entityName
+ * @param details
+ * @param callingUser
+ * @returns {ValidEvent}
+ */
 const constructEventForRemove = (entityName, details, callingUser) => {
   validateUserAndEntity(callingUser, entityName)
 
+  /**
+   * @type {ValidEvent}
+   */
   const event = {
+    id: uuidv4(),
+    time: new Date(),
     partitionKey: `${ADMIN_EVENT_PREFIX}${entityName}`,
     subject: 'DDI Admin Remove Pseudonym',
     data: JSON.stringify({
