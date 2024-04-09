@@ -23,25 +23,15 @@ module.exports = [{
     }
 
     try {
-      const result = await addUser(request.payload, getCallingUser(request))
+      const callingUser = getCallingUser(request)
+      const result = await addUser(request.payload, callingUser)
 
       return h.response(result).code(200)
     } catch (e) {
       if (e instanceof DuplicateResourceError) {
-        const messageArray = []
-
-        if (e.message.toLowerCase().includes('username')) {
-          messageArray.push('Username already exists.')
-        }
-
-        if (e.message.toLowerCase().includes('pseudonym')) {
-          messageArray.push('Pseudonym already exists.')
-        }
-
-        const message = messageArray.join(' ')
         return h.response({
-          error: message,
-          message,
+          error: e.message,
+          message: e.message,
           statusCode: 409
         }).code(409)
       }

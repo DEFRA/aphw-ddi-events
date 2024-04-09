@@ -125,13 +125,14 @@ const findUserByUsername = async (username) => {
  */
 const addUser = async (payload, callingUser) => {
   await addUserPreflightCheck(payload)
-
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
+
   const client = getPseudonymClient()
   await client.createEntity(entity)
-
   const createdEntity = await client.getEntity(PSEUDONYM, entity.rowKey)
+
   await auditAdd(PSEUDONYM, payload, callingUser)
+
   return mapEntityAsJson(createdEntity)
 }
 

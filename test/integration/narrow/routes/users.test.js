@@ -95,7 +95,7 @@ describe('Users endpoint', () => {
     })
 
     test('POST /users route returns 409 given username already exists', async () => {
-      addUser.mockRejectedValue(new DuplicateResourceError('Username already exists.'))
+      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with username internal-system.'))
 
       const options = {
         method: 'POST',
@@ -110,13 +110,13 @@ describe('Users endpoint', () => {
       expect(response.statusCode).toBe(409)
       expect(JSON.parse(response.payload)).toEqual({
         statusCode: 409,
-        error: 'Username already exists.',
-        message: 'Username already exists.'
+        error: 'Resource already found with username internal-system.',
+        message: 'Resource already found with username internal-system.'
       })
     })
 
     test('POST /users route returns 409 given pseudonym already exists', async () => {
-      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with pseudonym John'))
+      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with pseudonym Hal 3000.'))
 
       const options = {
         method: 'POST',
@@ -131,20 +131,20 @@ describe('Users endpoint', () => {
       expect(response.statusCode).toBe(409)
       expect(JSON.parse(response.payload)).toEqual({
         statusCode: 409,
-        error: 'Pseudonym already exists.',
-        message: 'Pseudonym already exists.'
+        error: 'Resource already found with pseudonym Hal 3000.',
+        message: 'Resource already found with pseudonym Hal 3000.'
       })
     })
 
     test('POST /users route returns 409 given username and pseudonym both already exist', async () => {
-      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with pseudonym John. Resource already found with username john.adams'))
+      addUser.mockRejectedValue(new DuplicateResourceError('Resource already found with pseudonym John. Resource already found with username john.adams.'))
 
       const options = {
         method: 'POST',
         url: '/users',
         payload: {
-          username: 'internal-system',
-          pseudonym: 'Hal 3000'
+          username: 'john.adams',
+          pseudonym: 'John'
         }
       }
 
@@ -152,8 +152,8 @@ describe('Users endpoint', () => {
       expect(response.statusCode).toBe(409)
       expect(JSON.parse(response.payload)).toEqual({
         statusCode: 409,
-        error: 'Username already exists. Pseudonym already exists.',
-        message: 'Username already exists. Pseudonym already exists.'
+        error: 'Resource already found with pseudonym John. Resource already found with username john.adams.',
+        message: 'Resource already found with pseudonym John. Resource already found with username john.adams.'
       })
     })
 
