@@ -135,11 +135,15 @@ const addUserPreflightCheck = async (payload) => {
   const results = await getPseudonyms()
 
   results.some(result => {
+    const errors = []
     if (payload.username === result.username) {
-      throw new DuplicateResourceError(`Resource already found with username ${payload.username}`)
+      errors.push(`Resource already found with username ${payload.username}.`)
     }
     if (payload.pseudonym === result.pseudonym) {
-      throw new DuplicateResourceError(`Resource already found with pseudonym ${payload.pseudonym}`)
+      errors.push(`Resource already found with pseudonym ${payload.pseudonym}.`)
+    }
+    if (errors.length) {
+      throw new DuplicateResourceError(errors.join(' '))
     }
     return false
   })

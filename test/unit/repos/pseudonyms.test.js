@@ -142,8 +142,8 @@ describe('Pseudonyms repo', () => {
 
       await expect(addUser({
         username: 'jane-doe',
-        pseudonym: 'John'
-      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe'))
+        pseudonym: 'John2'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe.'))
     })
   })
 
@@ -189,8 +189,8 @@ describe('Pseudonyms repo', () => {
 
       await expect(addUserPreflightCheck({
         username: 'jane-doe',
-        pseudonym: 'John'
-      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe'))
+        pseudonym: 'John2'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe.'))
     })
 
     test('should throw a DuplicateResourceError given pseudonym already exists', async () => {
@@ -202,7 +202,19 @@ describe('Pseudonyms repo', () => {
       await expect(addUserPreflightCheck({
         username: 'jane-doe-2',
         pseudonym: 'John'
-      })).rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John'))
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John.'))
+    })
+
+    test('should throw a DuplicateResourceError with details given both username and pseudonym already exists', async () => {
+      getPseudonymClient.mockReturnValue({
+        createTable: jest.fn(),
+        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+      })
+
+      await expect(addUserPreflightCheck({
+        username: 'jane-doe',
+        pseudonym: 'John'
+      })).rejects.toThrow(new DuplicateResourceError('Resource already found with username jane-doe. Resource already found with pseudonym John.'))
     })
   })
 
