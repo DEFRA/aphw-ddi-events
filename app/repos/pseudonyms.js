@@ -110,7 +110,7 @@ const createRow = (user) => {
  * @param {string} username
  * @returns {Promise<undefined|MappedEntity>}
  */
-const findUser = async (username) => {
+const findUserByUsername = async (username) => {
   const results = await getPseudonyms()
 
   return results.find(result => {
@@ -120,26 +120,42 @@ const findUser = async (username) => {
 
 /**
  * @param {{username: string; pseudonym: string}} payload
+ * @param callingUser
  * @returns {Promise<MappedEntity>}
  */
 const addUser = async (payload, callingUser) => {
-  const foundUser = await findUser(payload.username)
-
-  if (foundUser !== undefined) {
-    throw new DuplicateResourceError(`Resource already found with username ${payload.username}`)
-  }
-
+  await addUserPreflightCheck(payload)
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
+
   const client = getPseudonymClient()
   await client.createEntity(entity)
-
   const createdEntity = await client.getEntity(PSEUDONYM, entity.rowKey)
+
   await auditAdd(PSEUDONYM, payload, callingUser)
+
   return mapEntityAsJson(createdEntity)
 }
 
+const addUserPreflightCheck = async (payload) => {
+  const results = await getPseudonyms()
+
+  results.some(result => {
+    const errors = []
+    if (payload.username === result.username) {
+      errors.push(`Resource already found with username ${payload.username}.`)
+    }
+    if (payload.pseudonym === result.pseudonym) {
+      errors.push(`Resource already found with pseudonym ${payload.pseudonym}.`)
+    }
+    if (errors.length) {
+      throw new DuplicateResourceError(errors.join(' '))
+    }
+    return false
+  })
+}
+
 const removeUser = async (username, callingUser) => {
-  const foundUser = await findUser(username)
+  const foundUser = await findUserByUsername(username)
 
   if (foundUser === undefined) {
     throw new ResourceNotFoundError(`Resource not found with username ${username}`)
@@ -153,7 +169,8 @@ const removeUser = async (username, callingUser) => {
 module.exports = {
   getPseudonyms,
   getPseudonymsAsMap,
+  addUserPreflightCheck,
   addUser,
   removeUser,
-  findUser
+  findUserByUsername
 }

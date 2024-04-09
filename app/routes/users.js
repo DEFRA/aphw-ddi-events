@@ -23,12 +23,17 @@ module.exports = [{
     }
 
     try {
-      const result = await addUser(request.payload, getCallingUser(request))
+      const callingUser = getCallingUser(request)
+      const result = await addUser(request.payload, callingUser)
 
       return h.response(result).code(200)
     } catch (e) {
       if (e instanceof DuplicateResourceError) {
-        return h.response(e.message).code(409)
+        return h.response({
+          error: e.message,
+          message: e.message,
+          statusCode: 409
+        }).code(409)
       }
       throw e
     }
