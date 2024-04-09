@@ -33,7 +33,7 @@ describe('Audit helper', () => {
       time: expect.any(Date),
       partitionKey: 'uk.gov.defra.ddi.admin.pseudonym',
       subject: 'DDI Admin Add Pseudonym',
-      data: '{"message":{"actioningUser":{"username":"valid-user","displayname":"Valid User"},"operation":"add pseudonym","added":{"username":"username1","pseudonym":"pseudonym1"}}}'
+      data: { message: { actioningUser: { username: 'valid-user', displayname: 'Valid User' }, operation: 'add pseudonym', added: { username: 'username1', pseudonym: 'pseudonym1' } } }
     })
   })
 
@@ -52,7 +52,7 @@ describe('Audit helper', () => {
       time: expect.any(Date),
       partitionKey: 'uk.gov.defra.ddi.admin.pseudonym',
       subject: 'DDI Admin Remove Pseudonym',
-      data: '{"message":{"actioningUser":{"username":"valid-user","displayname":"Valid User"},"operation":"remove pseudonym","removed":{"username":"username2"}}}'
+      data: { message: { actioningUser: { username: 'valid-user', displayname: 'Valid User' }, operation: 'remove pseudonym', removed: { username: 'username2' } } }
     })
   })
 })

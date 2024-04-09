@@ -31,7 +31,7 @@ const constructEventForAdd = (entityName, details, callingUser) => {
     time: new Date(),
     partitionKey: `${ADMIN_EVENT_PREFIX}${entityName}`,
     subject: 'DDI Admin Add Pseudonym',
-    data: JSON.stringify({
+    data: {
       message: {
         actioningUser: callingUser,
         operation: 'add pseudonym',
@@ -40,7 +40,7 @@ const constructEventForAdd = (entityName, details, callingUser) => {
           pseudonym: details.pseudonym
         }
       }
-    })
+    }
   }
 
   return event
@@ -63,7 +63,7 @@ const constructEventForRemove = (entityName, details, callingUser) => {
     time: new Date(),
     partitionKey: `${ADMIN_EVENT_PREFIX}${entityName}`,
     subject: 'DDI Admin Remove Pseudonym',
-    data: JSON.stringify({
+    data: {
       message: {
         actioningUser: callingUser,
         operation: 'remove pseudonym',
@@ -71,7 +71,7 @@ const constructEventForRemove = (entityName, details, callingUser) => {
           username: details.username
         }
       }
-    })
+    }
   }
 
   return event
