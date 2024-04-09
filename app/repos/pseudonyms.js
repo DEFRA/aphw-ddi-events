@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require('uuid')
 const { getPseudonymClient } = require('../storage')
 const { DuplicateResourceError } = require('../errors/duplicateResourceError')
 const { ResourceNotFoundError } = require('../errors/resourceNotFound')
+const { auditAdd, auditRemove } = require('../lib/audit-helper')
+const { PSEUDONYM } = require('../constants/entity-names')
 
 /**
  * @typedef {{
@@ -98,7 +100,7 @@ const mapEntityAsJson = (entity) => {
  */
 const createRow = (user) => {
   return {
-    partitionKey: 'pseudonym',
+    partitionKey: PSEUDONYM,
     rowKey: uuidv4(),
     data: JSON.stringify(user)
   }
@@ -118,16 +120,18 @@ const findUserByUsername = async (username) => {
 
 /**
  * @param {{username: string; pseudonym: string}} payload
+ * @param callingUser
  * @returns {Promise<MappedEntity>}
  */
-const addUser = async (payload) => {
+const addUser = async (payload, callingUser) => {
   await addUserPreflightCheck(payload)
 
   const entity = createRow({ username: payload.username, pseudonym: payload.pseudonym })
   const client = getPseudonymClient()
   await client.createEntity(entity)
 
-  const createdEntity = await client.getEntity('pseudonym', entity.rowKey)
+  const createdEntity = await client.getEntity(PSEUDONYM, entity.rowKey)
+  await auditAdd(PSEUDONYM, payload, callingUser)
   return mapEntityAsJson(createdEntity)
 }
 
@@ -149,15 +153,16 @@ const addUserPreflightCheck = async (payload) => {
   })
 }
 
-const removeUser = async (username) => {
-  const foundUser = await findUserByUsername(username)
+const removeUser = async (username, callingUser) => {
+  const foundUser = await findUser(username)
 
   if (foundUser === undefined) {
     throw new ResourceNotFoundError(`Resource not found with username ${username}`)
   }
 
   const client = getPseudonymClient()
-  await client.deleteEntity('pseudonym', foundUser.rowKey)
+  await client.deleteEntity(PSEUDONYM, foundUser.rowKey)
+  await auditRemove(PSEUDONYM, foundUser, callingUser)
 }
 
 module.exports = {

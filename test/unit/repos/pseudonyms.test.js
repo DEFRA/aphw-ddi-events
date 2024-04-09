@@ -3,7 +3,13 @@ const {
   getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck
 } = require('../../../app/repos/pseudonyms')
 
+const validUser = {
+  username: 'valid-user',
+  displayname: 'Valid User'
+}
+
 jest.mock('../../../app/storage')
+const { getClient } = require('../../../app/storage')
 const { getPseudonymClient } = require('../../../app/storage')
 const { DuplicateResourceError } = require('../../../app/errors/duplicateResourceError')
 const { ResourceNotFoundError } = require('../../../app/errors/resourceNotFound')
@@ -16,6 +22,12 @@ describe('Pseudonyms repo', () => {
 
   beforeEach(() => {
     getPseudonymClient.mockReturnValue({
+      createTable: jest.fn(),
+      createEntity: entityClient,
+      listEntities: listEntitiesMock,
+      deleteEntity: deleteEntityMock
+    })
+    getClient.mockReturnValue({
       createTable: jest.fn(),
       createEntity: entityClient,
       listEntities: listEntitiesMock,
@@ -77,7 +89,6 @@ describe('Pseudonyms repo', () => {
       const expectedMap = new Map(mapEntries)
       const map = await getPseudonymsAsMap()
 
-      console.log('map', map)
       expect(map.get('internal-user')).toBe('Hal')
       expect(map.size).toBe(4)
       expect(map).toEqual(expectedMap)
@@ -112,15 +123,14 @@ describe('Pseudonyms repo', () => {
       }))
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator()),
+        listEntities: listEntitiesMock,
         createEntity: createEntityMock,
         getEntity: getEntityMock
       })
-
       const user = await addUser({
         username: 'Cassie.Bartell71',
         pseudonym: 'Rod'
-      })
+      }, validUser)
       expect(createEntityMock).toBeCalledWith({
         partitionKey: 'pseudonym',
         rowKey: expect.any(String),
@@ -202,7 +212,7 @@ describe('Pseudonyms repo', () => {
       await expect(addUserPreflightCheck({
         username: 'jane-doe-2',
         pseudonym: 'John'
-      })).rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John.'))
+      }.rejects.toThrow(new DuplicateResourceError('Resource already found with pseudonym John.'))))
     })
 
     test('should throw a DuplicateResourceError with details given both username and pseudonym already exists', async () => {
@@ -235,11 +245,11 @@ describe('Pseudonyms repo', () => {
 
   describe('removeUser', () => {
     test('should remove user', async () => {
-      await removeUser('jane-doe')
+      await removeUser('jane-doe', validUser)
       expect(deleteEntityMock).toBeCalledWith('pseudonym', '102')
     })
     test('should return a DuplicateResourceError given user does not exist', async () => {
-      await expect(removeUser('Cassie.Bartell71')).rejects.toThrow(ResourceNotFoundError)
+      await expect(removeUser('Cassie.Bartell71', validUser)).rejects.toThrow(ResourceNotFoundError)
     })
   })
 })
