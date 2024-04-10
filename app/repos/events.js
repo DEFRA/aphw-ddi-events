@@ -1,6 +1,7 @@
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 const { getPseudonymsAsMap } = require('./pseudonyms')
+const systemPseudonyms = require('../constants/system-pseudonyms')
 
 const constructQueryText = pks => {
   const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
@@ -32,7 +33,7 @@ const getEvents = async (pks) => {
 }
 
 const changeUsernameToPseudonym = (username, pseudonyms) => {
-  return pseudonyms.get(username) ?? 'Index user'
+  return pseudonyms.get(username) ?? systemPseudonyms[username] ?? 'Index user'
 }
 
 const mapEntity = (entity, pseudonyms) => {
