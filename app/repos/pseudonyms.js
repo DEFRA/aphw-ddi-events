@@ -49,7 +49,7 @@ const getPseudonymsAsMap = async () => {
     const resultMap = new Map()
 
     for (const mappedEntity of results) {
-      resultMap.set(mappedEntity.username, mappedEntity.pseudonym)
+      resultMap.set(mappedEntity.username.toLowerCase(), mappedEntity.pseudonym)
     }
 
     return resultMap
@@ -114,7 +114,7 @@ const findUserByUsername = async (username) => {
   const results = await getPseudonyms()
 
   return results.find(result => {
-    return username === result.username
+    return username.toLowerCase() === result.username.toLowerCase()
   })
 }
 
@@ -141,11 +141,11 @@ const addUserPreflightCheck = async (payload) => {
 
   results.some(result => {
     const errors = []
-    if (payload.username === result.username) {
-      errors.push(`Resource already found with username ${payload.username}.`)
+    if (payload.username.toLowerCase() === result.username.toLowerCase()) {
+      errors.push(`Resource already found with username ${result.username}.`)
     }
-    if (payload.pseudonym === result.pseudonym) {
-      errors.push(`Resource already found with pseudonym ${payload.pseudonym}.`)
+    if (payload.pseudonym.toLowerCase() === result.pseudonym.toLowerCase()) {
+      errors.push(`Resource already found with pseudonym ${result.pseudonym}.`)
     }
     if (errors.length) {
       throw new DuplicateResourceError(errors.join(' '))
