@@ -24,8 +24,8 @@ const pseudonyms = [
   {
     rowKey: '103',
     data: JSON.stringify({
-      username: 'phil-jones',
-      pseudonym: 'Martin'
+      username: 'Phil-Jones',
+      pseudonym: 'martin'
     })
   }
 ]

@@ -46,8 +46,8 @@ describe('Users endpoint', () => {
       expect(users[1].pseudonym).toBe('Joe')
       expect(users[2].username).toBe('jane-doe')
       expect(users[2].pseudonym).toBe('John')
-      expect(users[3].username).toBe('phil-jones')
-      expect(users[3].pseudonym).toBe('Martin')
+      expect(users[3].username).toBe('Phil-Jones')
+      expect(users[3].pseudonym).toBe('martin')
     })
 
     test('GET /users route returns 500 if db error', async () => {

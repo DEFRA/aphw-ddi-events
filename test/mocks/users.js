@@ -13,8 +13,8 @@ const users = [
     pseudonym: 'John'
   },
   {
-    username: 'phil-jones',
-    pseudonym: 'Martin'
+    username: 'Phil-Jones',
+    pseudonym: 'martin'
   }
 ]
 
