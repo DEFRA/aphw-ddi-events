@@ -68,8 +68,20 @@ describe('Events repo', () => {
       expect(changeUsernameToPseudonym('internal-user', pseudonymMap)).toEqual('Hal')
     })
 
-    test('should change username to Pseudonym given one exists', () => {
+    test('should change username to Pseudonym given one does not exist', () => {
       expect(changeUsernameToPseudonym('someone', pseudonymMap)).toEqual('Index user')
+    })
+
+    test('should change username to Pseudonym given username is import-access-db', () => {
+      expect(changeUsernameToPseudonym('import-access-db', pseudonymMap)).toEqual('Legacy data importer')
+    })
+
+    test('should change username to Pseudonym given username is robot-import-system-user', () => {
+      expect(changeUsernameToPseudonym('robot-import-system-user', pseudonymMap)).toEqual('XLB robot importer')
+    })
+
+    test('should change username to Pseudonym given username is overnight-job-system-user', () => {
+      expect(changeUsernameToPseudonym('overnight-job-system-user', pseudonymMap)).toEqual('Automated processor')
     })
   })
 })
