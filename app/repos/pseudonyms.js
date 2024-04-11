@@ -138,20 +138,20 @@ const addUser = async (payload, callingUser) => {
 
 const addUserPreflightCheck = async (payload) => {
   const results = await getPseudonyms()
+  const errors = []
 
-  results.some(result => {
-    const errors = []
+  results.forEach(result => {
     if (payload.username.toLowerCase() === result.username.toLowerCase()) {
       errors.push(`Resource already found with username ${result.username}.`)
     }
     if (payload.pseudonym.toLowerCase() === result.pseudonym.toLowerCase()) {
       errors.push(`Resource already found with pseudonym ${result.pseudonym}.`)
     }
-    if (errors.length) {
-      throw new DuplicateResourceError(errors.join(' '))
-    }
-    return false
   })
+
+  if (errors.length) {
+    throw new DuplicateResourceError(errors.join(' '))
+  }
 }
 
 const removeUser = async (username, callingUser) => {
