@@ -59,7 +59,10 @@ const getPseudonyms = async () => {
       entities.push(entity)
     }
 
-    return entities.sort(sortByTimestamp(false)).map(mapEntityAsJson)
+    const sortAlgorithm = sortByTimestamp(false)
+    const sortedEntities = [...entities].sort(sortAlgorithm)
+
+    return sortedEntities.map(mapEntityAsJson)
   } catch (err) {
     console.log('Error getting pseudonyms', err.message)
     throw err
