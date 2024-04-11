@@ -1,6 +1,7 @@
 const { getMockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
 const {
-  getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck
+  getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck, sortByTimestamp,
+  sortByUsername
 } = require('../../../app/repos/pseudonyms')
 
 const validUser = {
@@ -42,6 +43,55 @@ describe('Pseudonyms repo', () => {
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  describe('sortBy', () => {
+    const list = [
+      {
+        rowKey: 1,
+        timestamp: '2024-04-11T08:00:43.8624424Z',
+        username: 'Joey_Flatley'
+      },
+      {
+        rowKey: 2,
+        timestamp: '2024-04-11T08:01:24.8314117Z',
+        username: 'Jeremy83'
+      },
+      {
+        rowKey: 3,
+        timestamp: '2024-04-11T08:01:24.8664459Z',
+        username: 'Kendrick_Wuckert'
+      },
+      {
+        rowKey: 4,
+        timestamp: '2024-04-11T08:01:24.8904697Z',
+        username: 'Shane63'
+      }
+    ]
+
+    describe('sortByTimestamp', () => {
+      test('should sort by timestamp asc', () => {
+        const sorted = [...list].sort(sortByTimestamp())
+        expect(sorted.map(r => r.rowKey)).toEqual([1, 2, 3, 4])
+      })
+
+      test('should sort by timestamp desc', () => {
+        const sorted = [...list].sort(sortByTimestamp(false))
+        expect(sorted.map(r => r.rowKey)).toEqual([4, 3, 2, 1])
+      })
+    })
+
+    describe('sortByUsername', () => {
+      test('should sort by username asc', () => {
+        const sorted = [...list].sort(sortByUsername())
+        expect(sorted.map(r => r.rowKey)).toEqual([2, 1, 3, 4])
+      })
+
+      test('should sort by username desc', () => {
+        const sorted = [...list].sort(sortByUsername(false))
+        expect(sorted.map(r => r.rowKey)).toEqual([4, 3, 1, 2])
+      })
+    })
   })
 
   describe('getPseudonyms', () => {

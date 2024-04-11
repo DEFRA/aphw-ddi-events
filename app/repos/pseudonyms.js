@@ -20,6 +20,26 @@ const { PSEUDONYM } = require('../constants/entity-names')
  *  }} MappedEntity
  */
 
+const sortBy = (key, ascending) => (a, b) => {
+  const order = ascending ? [1, -1] : [-1, 1]
+
+  if (a[key] > b[key]) {
+    return order[0]
+  }
+  if (a[key] < b[key]) {
+    return order[1]
+  }
+
+  return 0
+}
+
+const sortByTimestamp = (ascending = true) => {
+  return sortBy('timestamp', ascending)
+}
+
+const sortByUsername = (ascending = true) => {
+  return sortBy('username', ascending)
+}
 /**
  * @returns {Promise<MappedEntity[]>}
  */
@@ -27,16 +47,19 @@ const getPseudonyms = async () => {
   try {
     const client = getPseudonymClient()
 
-    const entities = client.listEntities()
     /**
-     * @type {MappedEntity[]}
+     * @type {AsyncIterableIterator<StorageEntity>}
      */
-    const results = []
-    for await (const entity of entities) {
-      results.push(mapEntityAsJson(entity))
+    const entityIterator = client.listEntities()
+    /**
+     * @type {StorageEntity[]}
+     */
+    const entities = []
+    for await (const entity of entityIterator) {
+      entities.push(entity)
     }
 
-    return results
+    return entities.sort(sortByTimestamp(false)).map(mapEntityAsJson)
   } catch (err) {
     console.log('Error getting pseudonyms', err.message)
     throw err
@@ -65,9 +88,9 @@ const getPseudonymsAsMap = async () => {
  */
 const mapEntity = (entity) => {
   const data = JSON.parse(entity.data)
-  const { username, pseudonym } = data
+  const { username, pseudonym, timestamp } = data
 
-  return [username, pseudonym, entity.rowKey]
+  return [username, pseudonym, entity.rowKey, timestamp]
 }
 
 /**
@@ -75,11 +98,13 @@ const mapEntity = (entity) => {
  * @returns {MappedEntity}
  */
 const mapEntityAsJson = (entity) => {
-  const mapped = mapEntity(entity)
+  const [username, pseudonym, rowKey, timestamp] = mapEntity(entity)
+
   return {
-    username: mapped[0],
-    pseudonym: mapped[1],
-    rowKey: mapped[2]
+    timestamp,
+    username,
+    pseudonym,
+    rowKey
   }
 }
 
@@ -172,5 +197,7 @@ module.exports = {
   addUserPreflightCheck,
   addUser,
   removeUser,
+  sortByTimestamp,
+  sortByUsername,
   findUserByUsername
 }
