@@ -48,24 +48,24 @@ describe('Pseudonyms repo', () => {
   describe('sortBy', () => {
     const list = [
       {
-        rowKey: 1,
-        timestamp: '2024-04-11T08:00:43.8624424Z',
-        username: 'Joey_Flatley'
-      },
-      {
         rowKey: 2,
         timestamp: '2024-04-11T08:01:24.8314117Z',
         username: 'Jeremy83'
       },
       {
-        rowKey: 3,
-        timestamp: '2024-04-11T08:01:24.8664459Z',
-        username: 'Kendrick_Wuckert'
+        rowKey: 1,
+        timestamp: '2024-04-11T08:00:43.8624424Z',
+        username: 'Joey_Flatley'
       },
       {
         rowKey: 4,
         timestamp: '2024-04-11T08:01:24.8904697Z',
         username: 'Shane63'
+      },
+      {
+        rowKey: 3,
+        timestamp: '2024-04-11T08:01:24.8664459Z',
+        username: 'Kendrick_Wuckert'
       }
     ]
 
