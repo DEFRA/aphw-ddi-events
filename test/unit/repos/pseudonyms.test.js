@@ -63,6 +63,11 @@ describe('Pseudonyms repo', () => {
         username: 'Shane63'
       },
       {
+        rowKey: 5,
+        timestamp: '2024-04-11T08:01:24.8904697Z',
+        username: 'Shane63'
+      },
+      {
         rowKey: 3,
         timestamp: '2024-04-11T08:01:24.8664459Z',
         username: 'Kendrick_Wuckert'
@@ -72,24 +77,24 @@ describe('Pseudonyms repo', () => {
     describe('sortByTimestamp', () => {
       test('should sort by timestamp asc', () => {
         const sorted = [...list].sort(sortByTimestamp())
-        expect(sorted.map(r => r.rowKey)).toEqual([1, 2, 3, 4])
+        expect(sorted.map(r => r.rowKey)).toEqual([1, 2, 3, 4, 5])
       })
 
       test('should sort by timestamp desc', () => {
         const sorted = [...list].sort(sortByTimestamp(false))
-        expect(sorted.map(r => r.rowKey)).toEqual([4, 3, 2, 1])
+        expect(sorted.map(r => r.rowKey)).toEqual([4, 5, 3, 2, 1])
       })
     })
 
     describe('sortByUsername', () => {
       test('should sort by username asc', () => {
         const sorted = [...list].sort(sortByUsername())
-        expect(sorted.map(r => r.rowKey)).toEqual([2, 1, 3, 4])
+        expect(sorted.map(r => r.rowKey)).toEqual([2, 1, 3, 4, 5])
       })
 
       test('should sort by username desc', () => {
         const sorted = [...list].sort(sortByUsername(false))
-        expect(sorted.map(r => r.rowKey)).toEqual([4, 3, 1, 2])
+        expect(sorted.map(r => r.rowKey)).toEqual([4, 5, 3, 1, 2])
       })
     })
   })
