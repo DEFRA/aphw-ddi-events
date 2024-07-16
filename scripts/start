@@ -11,9 +11,9 @@ cd "${projectRoot}"
 
 . "${projectRoot}/.env"
 
-docker-compose down
+docker compose down
 
-docker-compose \
+docker compose \
   -f docker-compose.yaml \
   -f docker-compose.override.yaml \
   up $args $@
