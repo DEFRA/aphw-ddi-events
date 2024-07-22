@@ -33,7 +33,7 @@ describe('handle event', () => {
   test('should handle a permanently deleted event', async () => {
     const eventType = 'event.delete.permanent'
     await handleEvent(purgeEvent, eventType)
-    expect(save).toHaveBeenCalledWith(purgeEvent, eventType)
+    expect(save).toHaveBeenCalledWith(purgeEvent, 'event')
     expect(purgeEventRecords).toHaveBeenCalledWith(purgeEvent)
   })
 })

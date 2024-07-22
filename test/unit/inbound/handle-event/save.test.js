@@ -1,4 +1,4 @@
-const { EVENT, COMMENT_EVENT, WARNING_EVENT } = require('../../../../app/constants/event-types')
+const { EVENT, COMMENT_EVENT, WARNING_EVENT, PERMANENT_DELETE_EVENT } = require('../../../../app/constants/event-types')
 const { save } = require('../../../../app/inbound/handle-event/save')
 
 jest.mock('../../../../app/inbound/handle-event/event')
@@ -24,6 +24,10 @@ describe('save', () => {
     expect(saveEvent).toHaveBeenCalledWith(dummyEvent)
     expect(saveComment).not.toHaveBeenCalled()
     expect(saveWarningEvent).not.toHaveBeenCalled()
+  })
+
+  test('should not handle PERMANENT-DELETE-EVENT event-type', async () => {
+    await expect(save(dummyEvent, PERMANENT_DELETE_EVENT)).rejects.toThrow()
   })
 
   test('should handle COMMENT event-type', async () => {

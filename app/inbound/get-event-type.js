@@ -8,6 +8,8 @@ const getParentEventType = (type) => {
     return COMMENT_EVENT
   } else if (type.startsWith(WARNING_EVENT_PREFIX)) {
     return WARNING_EVENT
+  } else if (type.startsWith(PERMANENT_DELETE_EVENT)) {
+    return EVENT
   } else {
     throw new Error(`Unknown event type: ${type}`)
   }
@@ -20,7 +22,15 @@ const getEventType = (type) => {
   return getParentEventType(type)
 }
 
+const getSaveEventType = (eventType) => {
+  if (eventType.startsWith(PERMANENT_DELETE_EVENT)) {
+    return EVENT
+  }
+  return eventType
+}
+
 module.exports = {
   getParentEventType,
-  getEventType
+  getEventType,
+  getSaveEventType
 }
