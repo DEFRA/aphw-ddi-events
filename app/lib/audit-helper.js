@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid')
 const { PSEUDONYM } = require('../constants/entity-names')
 const { ADMIN_EVENT_PREFIX } = require('../constants/event-prefixes')
-const { saveEvent } = require('../inbound/save-event/event')
+const { saveEvent } = require('../inbound/handle-event/event')
 const { isUserValid } = require('../auth/get-user')
 
 const auditAdd = async (entityName, details, callingUser) => {

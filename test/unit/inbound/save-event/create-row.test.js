@@ -1,4 +1,4 @@
-const { createRow } = require('../../../../app/inbound/save-event/create-row')
+const { createRow } = require('../../../../app/inbound/handle-event/create-row')
 describe('create-row', () => {
   describe('createRow', () => {
     test('should create a row', () => {
