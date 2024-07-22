@@ -46,7 +46,7 @@ describe('storage', () => {
   test('should return correct client type', async () => {
     process.env.AZURE_STORAGE_USE_CONNECTION_STRING = 'false'
 
-    const { initialiseTables, getClient } = require('../../../app/storage')
+    const { initialiseTables, getClient, getPseudonymClient } = require('../../../app/storage')
     await initialiseTables()
 
     const eventClient = getClient(EVENT)
@@ -57,6 +57,9 @@ describe('storage', () => {
 
     const warningClient = getClient(WARNING_EVENT)
     expect(warningClient).not.toBe(null)
+
+    const pseudonymClient = getPseudonymClient()
+    expect(pseudonymClient).not.toBe(null)
   })
 
   test('should throw error if invalid client type', async () => {
