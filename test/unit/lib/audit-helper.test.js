@@ -5,7 +5,7 @@ const validUser = {
   displayname: 'Valid User'
 }
 
-jest.mock('../../../app/inbound/save-event/event')
+jest.mock('../../../app/inbound/handle-event/event')
 const { saveEvent } = require('../../../app/inbound/handle-event/event')
 const { PSEUDONYM } = require('../../../app/constants/entity-names')
 
