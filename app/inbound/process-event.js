@@ -9,7 +9,7 @@ const processEvent = async (event) => {
   validateEventData(event.data, eventType)
 
   await handleEvent(event, getEventType(event.type))
-  // await save(event, eventType)
+
   if (eventType === WARNING_EVENT) {
     await sendAlert(event)
   }
