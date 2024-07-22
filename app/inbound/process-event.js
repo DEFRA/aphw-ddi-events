@@ -2,7 +2,7 @@ const { WARNING_EVENT } = require('../constants/event-types')
 const { getParentEventType, getEventType } = require('./get-event-type')
 const { validateEventData } = require('./validate-event-data')
 const { sendAlert } = require('../messaging/send-alert')
-const { handleEvent } = require('./handle-event/handle-event')
+const { handleEvent } = require('./handle-event/index')
 
 const processEvent = async (event) => {
   const eventType = getParentEventType(event.type)

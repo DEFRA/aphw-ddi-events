@@ -1,5 +1,5 @@
-jest.mock('../../../app/inbound/handle-event/handle-event')
-const { handleEvent } = require('../../../app/inbound/handle-event/handle-event')
+jest.mock('../../../app/inbound/handle-event/index')
+const { handleEvent } = require('../../../app/inbound/handle-event/index')
 const { processEvent } = require('../../../app/inbound')
 
 jest.mock('../../../app/messaging/send-alert')

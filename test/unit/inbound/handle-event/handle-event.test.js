@@ -1,4 +1,4 @@
-const { handleEvent } = require('../../../../app/inbound/handle-event/handle-event')
+const { handleEvent } = require('../../../../app/inbound/handle-event/index')
 
 jest.mock('../../../../app/inbound/handle-event/save')
 const { save } = require('../../../../app/inbound/handle-event/save')
