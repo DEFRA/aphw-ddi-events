@@ -1,42 +1,33 @@
-const { eventsForRouteTests } = require('../../mocks/events')
-const { validateEvent } = require('../../../app/messaging/validate-event')
+const { validateEventData } = require('../../../app/inbound/validate-event-data')
+
+const escapedJSON = jsonObj => {
+  return `"${JSON.stringify(jsonObj).replaceAll('"', '\\"')}"`
+}
 
 describe('validate-event-data', () => {
-  test('should validate standard events ', () => {
-    eventsForRouteTests.forEach(event => {
-      expect(() => validateEvent(event)).not.toThrow()
-    })
+  test('should validatte event data', () => {
+    const eventData = {
+      message: escapedJSON({
+        operation: 'activity',
+        activity: {
+          activity: '4',
+          activityType: 'received',
+          pk: 'ED300000',
+          source: 'dog',
+          activityDate: '2024-02-13T00:00:00.000Z',
+          activityLabel: 'Police correspondence'
+        },
+        actioningUser: {
+          username: 'Developer',
+          displayname: 'Developer'
+        }
+      })
+    }
+    expect(() => validateEventData(eventData, 'event')).not.toThrow()
   })
 
-  test('should not validate invalid events', () => {
-    const invalidEventMissingType = {
-      time: '2024-07-23T08:39:05.824Z',
-      actioningUser: {
-        username: 'dev@test.com',
-        displayname: 'Developer'
-      },
-      source: 'aphw-ddi-portal',
-      specversion: '1.0',
-      operation: 'updated person',
-      changes: {
-        added: [],
-        removed: [],
-        edited: [
-          [
-            'address/addressLine1',
-            '93 SILVERDALE AVENUE',
-            '91 SILVERDALE AVENUE'
-          ],
-          [
-            'contacts/email',
-            '',
-            'me@here.com'
-          ]
-        ]
-      },
-      timestamp: '2024-02-14T08:23:22.301Z',
-      rowKey: '82a0507b-f2e5-4ba7-8e41-14a7ef60b972|1707899002301'
-    }
-    expect(() => validateEvent(invalidEventMissingType)).toThrow(new Error('Event is invalid, "type" is required. "id" is required'))
+  test('should validate event data', () => {
+    const eventData = {}
+    expect(() => validateEventData(eventData, 'event')).toThrow(new Error('Event data is invalid, "message" is required'))
   })
 })

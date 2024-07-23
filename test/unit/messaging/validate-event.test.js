@@ -1,4 +1,5 @@
 const { validateEvent } = require('../../../app/messaging/validate-event')
+const { eventsForRouteTests } = require('../../mocks/events')
 
 const escapedJSON = jsonObj => {
   return `"${JSON.stringify(jsonObj).replaceAll('"', '\\"')}"`
@@ -37,5 +38,11 @@ describe('validate-event', () => {
   test('should throw validation error', () => {
     const event = {}
     expect(() => validateEvent(event)).toThrow('Event is invalid, "specversion" is required. "type" is required. "source" is required. "id" is required. "time" is required')
+  })
+
+  test('should validate standard events ', () => {
+    eventsForRouteTests.forEach(event => {
+      expect(() => validateEvent(event)).not.toThrow()
+    })
   })
 })
