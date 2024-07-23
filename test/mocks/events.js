@@ -1,6 +1,10 @@
 const eventsForRouteTests = [
   {
     operation: 'activity',
+    specversion: '1.0',
+    id: '3d8e44f5-8f38-497c-844f-825c3d7ff13d',
+    time: '2024-07-23T08:39:05.824Z',
+    source: 'aphw-ddi-portal',
     activity: {
       activity: '4',
       activityType: 'received',
@@ -23,6 +27,10 @@ const eventsForRouteTests = [
       username: 'dev@test.com',
       displayname: 'Developer'
     },
+    id: '7f9e0176-6344-4635-9927-2d96d8487656',
+    time: '2024-07-23T08:39:05.824Z',
+    specversion: '1.0',
+    source: 'aphw-ddi-portal',
     operation: 'updated dog',
     changes: {
       added: [],
@@ -45,6 +53,10 @@ const eventsForRouteTests = [
       username: 'dev@test.com',
       displayname: 'Developer'
     },
+    time: '2024-07-23T08:39:05.824Z',
+    specversion: '1.0',
+    id: '55b9ddbe-52f7-408d-a5ce-abc7ca7e9384',
+    source: 'aphw-ddi-portal',
     operation: 'created cdo',
     created: {
       owner: {
@@ -128,10 +140,14 @@ const eventsForRouteTests = [
     subject: 'DDI Create cdo'
   },
   {
+    id: '8b36949d-7dfe-4820-886c-9946168c4a80',
+    time: '2024-07-23T08:39:05.824Z',
     actioningUser: {
       username: 'dev@test.com',
       displayname: 'Developer'
     },
+    source: 'aphw-ddi-portal',
+    specversion: '1.0',
     operation: 'updated person',
     changes: {
       added: [],
