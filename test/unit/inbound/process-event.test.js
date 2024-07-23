@@ -6,6 +6,10 @@ jest.mock('../../../app/messaging/send-alert')
 const { sendAlert } = require('../../../app/messaging/send-alert')
 
 describe('process event', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('should process a permanently deleted event', async () => {
     const expectedEventType = 'event.delete.permanent'
     const event = {
@@ -32,5 +36,19 @@ describe('process event', () => {
 
     expect(handleEvent).toHaveBeenCalledWith(event, expectedEventType)
     expect(sendAlert).toHaveBeenCalledWith(event)
+  })
+
+  test('should process a comment event', async () => {
+    const expectedEventType = 'comment'
+    const event = {
+      partitionKey: 'ED300038',
+      type: 'uk.gov.defra.ddi.comment.dummy',
+      message: 'some message text'
+    }
+
+    await processEvent(event)
+
+    expect(handleEvent).toHaveBeenCalledWith(event, expectedEventType)
+    expect(sendAlert).not.toHaveBeenCalled()
   })
 })
