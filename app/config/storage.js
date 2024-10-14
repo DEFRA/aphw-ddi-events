@@ -5,6 +5,7 @@ const schema = Joi.object({
   connectionString: Joi.string().optional(),
   account: Joi.string().required(),
   eventTable: Joi.string().default('events'),
+  externalEventTable: Joi.string().default('external'),
   commentTable: Joi.string().default('comments'),
   warningTable: Joi.string().default('warnings'),
   pseudonymTable: Joi.string().default('pseudonyms')
@@ -15,6 +16,7 @@ const config = {
   connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
   account: process.env.AZURE_STORAGE_ACCOUNT_NAME,
   eventTable: process.env.AZURE_STORAGE_EVENT_TABLE,
+  externalEventTable: process.env.AZURE_STORAGE_EXTERNAL_EVENT_TABLE,
   commentTable: process.env.AZURE_STORAGE_COMMENT_TABLE,
   warningTable: process.env.AZURE_STORAGE_WARNING_TABLE,
   pseudonymTable: process.env.AZURE_STORAGE_PSEUDONYM_TABLE

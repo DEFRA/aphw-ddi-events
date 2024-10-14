@@ -1,4 +1,4 @@
-const { EVENT, COMMENT_EVENT, WARNING_EVENT, PERMANENT_DELETE_EVENT } = require('../../../app/constants/event-types')
+const { EVENT, COMMENT_EVENT, WARNING_EVENT, PERMANENT_DELETE_EVENT, EXTERNAL_EVENT } = require('../../../app/constants/event-types')
 const { getParentEventType, getEventType } = require('../../../app/inbound/get-event-type')
 
 describe('getEventType', () => {
@@ -13,6 +13,10 @@ describe('getEventType', () => {
 
     test('should handle WARNING', () => {
       expect(getParentEventType('uk.gov.defra.ddi.warning.abc')).toBe(WARNING_EVENT)
+    })
+
+    test('should handle EXTERNAL_EVENT', () => {
+      expect(getParentEventType('uk.gov.defra.ddi.external.abc')).toBe(EXTERNAL_EVENT)
     })
 
     test('should throw if invalid', () => {
