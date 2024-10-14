@@ -12,7 +12,7 @@ describe('validate-external-event', () => {
       time: '2024-02-14T09:55:28.8857932Z',
       partitionKey: 'key1',
       specversion: '1.0',
-      type: 'uk.gov.defra.ddi.external.view.owner',
+      type: 'uk.gov.defra.ddi.event.external.view.owner',
       source: 'aphw-ddi-portal',
       subject: 'Police Officer viewed owner record',
       data: '{ "message": ' + escapedJSON({

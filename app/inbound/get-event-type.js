@@ -27,7 +27,7 @@ const getEventType = (type) => {
 const getSaveEventType = (eventType) => {
   if (eventType.startsWith(PERMANENT_DELETE_EVENT)) {
     return EVENT
-  } else if (eventType.startsWith(EXTERNAL_EVENT_PREFIX)) {
+  } else if (eventType.startsWith(EXTERNAL_EVENT)) {
     return EXTERNAL_EVENT
   }
   return eventType
