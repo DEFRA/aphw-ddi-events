@@ -25,14 +25,14 @@ describe('process event', () => {
   })
 
   test('should process an external event', async () => {
-    const expectedEventType = 'external'
+    const expectedEventType = 'event.external'
     const event = {
       id: '369ec964-b9b4-4592-abbb-ff4648a88547',
       time: '2024-02-14T09:55:28.8857932Z',
       source: 'aphw-ddi-portal',
       subject: 'Police Officer viewed owner record',
       partitionKey: 'ED300038',
-      type: 'uk.gov.defra.ddi.external.view.owner',
+      type: 'uk.gov.defra.ddi.event.external.view.owner',
       message: '{"operation":"view","ownerId":"P-BBDC-8579","activityDate":"2024-02-13T00:00:00.000Z","activityLabel":"View Owner","actioningUser":{"username":"user@example.com","displayname":"Example User"}}'
     }
 

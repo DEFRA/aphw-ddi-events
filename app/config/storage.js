@@ -5,7 +5,7 @@ const schema = Joi.object({
   connectionString: Joi.string().optional(),
   account: Joi.string().required(),
   eventTable: Joi.string().default('events'),
-  externalEventTable: Joi.string().default('external'),
+  externalEventTable: Joi.string().default('externalevents'),
   commentTable: Joi.string().default('comments'),
   warningTable: Joi.string().default('warnings'),
   pseudonymTable: Joi.string().default('pseudonyms')

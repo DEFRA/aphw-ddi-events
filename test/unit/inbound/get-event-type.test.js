@@ -16,7 +16,7 @@ describe('getEventType', () => {
     })
 
     test('should handle EXTERNAL_EVENT', () => {
-      expect(getParentEventType('uk.gov.defra.ddi.external.abc')).toBe(EXTERNAL_EVENT)
+      expect(getParentEventType('uk.gov.defra.ddi.event.external')).toBe(EVENT)
     })
 
     test('should throw if invalid', () => {
@@ -27,6 +27,10 @@ describe('getEventType', () => {
   describe('getEventType', () => {
     test('should handle PURGE EVENT', () => {
       expect(getEventType('uk.gov.defra.ddi.event.delete.permanent')).toBe(PERMANENT_DELETE_EVENT)
+    })
+
+    test('should handle EXTERNAL EVENT', () => {
+      expect(getEventType('uk.gov.defra.ddi.event.external.view')).toBe(EXTERNAL_EVENT)
     })
 
     test('should handle other types', () => {
