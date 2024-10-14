@@ -26,7 +26,6 @@ describe('validate-external-event', () => {
         }
       }) + '}'
     }
-    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Event.data', event.data)
 
     expect(() => validateEvent(event)).not.toThrow()
   })
