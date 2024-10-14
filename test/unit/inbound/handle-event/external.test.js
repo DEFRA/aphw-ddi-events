@@ -14,7 +14,7 @@ describe('external', () => {
   const { saveExternalEvent } = require('../../../../app/inbound/handle-event/external-event')
 
   describe('saveExternalEvent', () => {
-    test('should save an external event', async () => {
+    test('should save an external event with partitionKey', async () => {
       const clientMock = {
         listEntities: jest.fn()
       }
@@ -33,6 +33,32 @@ describe('external', () => {
       expect(getClient).toHaveBeenCalledWith(EXTERNAL_EVENT)
       expect(createIfNotExists).toHaveBeenCalledWith(clientMock, {
         partitionKey: 'key',
+        id: 'id',
+        rowKey: 'id|1728916381110',
+        time: 1728916381110,
+        category: EXTERNAL_EVENT,
+        data: '{"property":true}'
+      })
+    })
+
+    test('should save an external event without partitionKey', async () => {
+      const clientMock = {
+        listEntities: jest.fn()
+      }
+      getClient.mockResolvedValue(clientMock)
+
+      const event = {
+        id: 'id',
+        time: 1728916381110,
+        data: {
+          property: true
+        }
+      }
+      await saveExternalEvent(event)
+
+      expect(getClient).toHaveBeenCalledWith(EXTERNAL_EVENT)
+      expect(createIfNotExists).toHaveBeenCalledWith(clientMock, {
+        partitionKey: 'id',
         id: 'id',
         rowKey: 'id|1728916381110',
         time: 1728916381110,
