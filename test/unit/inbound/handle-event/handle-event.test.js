@@ -18,6 +18,12 @@ const purgeEvent = {
   message: '{"actioningUser":{"username":"overnight-job-system-user","displayname":"Overnight Job System User"},"operation":"permanently deleted dog","deleted":{"indexNumber":"ED300038"}}'
 }
 
+const externalEvent = {
+  partitionKey: 'ED300038',
+  type: 'uk.gov.defra.ddi.event.external.view.owner',
+  message: '{"actioningUser":{"username":"overnight-job-system-user","displayname":"Overnight Job System User"},"operation":"viewed owner"'
+}
+
 describe('handle event', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
@@ -35,5 +41,11 @@ describe('handle event', () => {
     await handleEvent(purgeEvent, eventType)
     expect(save).toHaveBeenCalledWith(purgeEvent, 'event')
     expect(purgeEventRecords).toHaveBeenCalledWith(purgeEvent)
+  })
+
+  test('should handle an external event', async () => {
+    const eventType = 'event.external.view.owner'
+    await handleEvent(externalEvent, eventType)
+    expect(save).toHaveBeenCalledWith(externalEvent, 'event.external')
   })
 })

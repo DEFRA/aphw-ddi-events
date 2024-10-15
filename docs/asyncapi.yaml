@@ -48,7 +48,15 @@ components:
           - $ref: '#/components/schemas/EventData'
           - $ref: '#/components/schemas/CommentData'
           - $ref: '#/components/schemas/WarningData'
+          - $ref: '#/components/schemas/ExternalEventData'
     EventData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'
+    ExternalEventData:
       type: object
       required:
         - message

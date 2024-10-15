@@ -1,4 +1,4 @@
-const { EVENT, COMMENT_EVENT, WARNING_EVENT, PERMANENT_DELETE_EVENT } = require('../../../app/constants/event-types')
+const { EVENT, COMMENT_EVENT, WARNING_EVENT, PERMANENT_DELETE_EVENT, EXTERNAL_EVENT } = require('../../../app/constants/event-types')
 const { getParentEventType, getEventType } = require('../../../app/inbound/get-event-type')
 
 describe('getEventType', () => {
@@ -15,6 +15,10 @@ describe('getEventType', () => {
       expect(getParentEventType('uk.gov.defra.ddi.warning.abc')).toBe(WARNING_EVENT)
     })
 
+    test('should handle EXTERNAL_EVENT', () => {
+      expect(getParentEventType('uk.gov.defra.ddi.event.external')).toBe(EVENT)
+    })
+
     test('should throw if invalid', () => {
       expect(() => getParentEventType('uk.gov.defra.ddi.invalid.abc')).toThrow('Unknown event type: uk.gov.defra.ddi.invalid.abc')
     })
@@ -23,6 +27,10 @@ describe('getEventType', () => {
   describe('getEventType', () => {
     test('should handle PURGE EVENT', () => {
       expect(getEventType('uk.gov.defra.ddi.event.delete.permanent')).toBe(PERMANENT_DELETE_EVENT)
+    })
+
+    test('should handle EXTERNAL EVENT', () => {
+      expect(getEventType('uk.gov.defra.ddi.event.external.view')).toBe(EXTERNAL_EVENT)
     })
 
     test('should handle other types', () => {

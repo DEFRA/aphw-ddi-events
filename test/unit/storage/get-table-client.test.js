@@ -1,4 +1,4 @@
-const { EVENT, COMMENT_EVENT, WARNING_EVENT } = require('../../../app/constants/event-types')
+const { EVENT, COMMENT_EVENT, WARNING_EVENT, EXTERNAL_EVENT } = require('../../../app/constants/event-types')
 
 describe('storage', () => {
   const DEFAULT_ENV = process.env
@@ -29,7 +29,7 @@ describe('storage', () => {
     const { initialiseTables } = require('../../../app/storage')
     await initialiseTables()
 
-    expect(tableClient.fromConnectionString).toHaveBeenCalledTimes(4)
+    expect(tableClient.fromConnectionString).toHaveBeenCalledTimes(5)
   })
 
   test('should use DefaultAzureCredential if useConnectionString false', async () => {
@@ -38,8 +38,8 @@ describe('storage', () => {
     const { initialiseTables } = require('../../../app/storage')
     await initialiseTables()
 
-    expect(tableClient).toHaveBeenCalledTimes(4)
-    expect(defaultAzureCredential).toHaveBeenCalledTimes(4)
+    expect(tableClient).toHaveBeenCalledTimes(5)
+    expect(defaultAzureCredential).toHaveBeenCalledTimes(5)
     expect(tableClient.fromConnectionString).not.toHaveBeenCalled()
   })
 
@@ -57,6 +57,9 @@ describe('storage', () => {
 
     const warningClient = getClient(WARNING_EVENT)
     expect(warningClient).not.toBe(null)
+
+    const externalEventClient = getClient(EXTERNAL_EVENT)
+    expect(externalEventClient).not.toBe(null)
 
     const pseudonymClient = getPseudonymClient()
     expect(pseudonymClient).not.toBe(null)
