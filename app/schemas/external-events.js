@@ -9,10 +9,13 @@ const externalEventsQuerySchema = Joi.object({
 
 const externalEventsResponseSchema = Joi.object({
   results: Joi.array().items(Joi.object({
+    partitionKey: Joi.string().required(),
+    rowKey: Joi.string().required(),
+    username: Joi.string().required(),
     timestamp: Joi.string().required(),
     type: Joi.string().required(),
-    data: Joi.string().required()
-  }).unknown().required())
+    details: Joi.object().required()
+  }))
 })
 
 module.exports = {

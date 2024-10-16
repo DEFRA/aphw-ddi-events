@@ -29,10 +29,10 @@ module.exports = {
         pks
       } = request.query
 
-      const results = await getExternalEvents(queryType, pks, fromDate, toDate)
+      const rows = await getExternalEvents(queryType, pks, fromDate, toDate)
 
       return h.response({
-        results
+        results: rows
       }).code(200)
     }
   }

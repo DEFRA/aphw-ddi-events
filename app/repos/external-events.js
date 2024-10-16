@@ -40,11 +40,13 @@ const mapEntity = (entity) => {
   const message = JSON.parse(data.message)
   const username = message.actioningUser?.username
 
+  delete message.actioningUser
+
   message.username = username
   message.timestamp = entity.time
   message.type = entity.type
   message.rowKey = entity.rowKey
-  message.partitonKey = entity.partitionKey
+  message.partitionKey = entity.partitionKey
 
   return message
 }
