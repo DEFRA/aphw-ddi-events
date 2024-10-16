@@ -11,9 +11,7 @@ const createUserEntity = (username, event) => {
 }
 
 const createDogEntity = (pk, event) => {
-  const row = createRowWithoutExtraTimestamp(`dog_${pk}`, `${getTimeString()}|${uuidv4()}`, EXTERNAL_EVENT, event)
-  console.log('JB row', row)
-  return row
+  return createRowWithoutExtraTimestamp(`dog_${pk}`, `${getTimeString()}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createOwnerEntity = (pk, event) => {

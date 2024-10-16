@@ -97,9 +97,4 @@ describe('ExternalEvents repo', () => {
 
     await expect(getExternalEvents('dog', ['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
   })
-  describe('mapEntity', () => {
-    test('should not be case sensitive', () => {
-
-    })
-  })
 })
