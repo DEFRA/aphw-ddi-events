@@ -1,4 +1,4 @@
-const { createRow } = require('../../../../app/inbound/handle-event/create-row')
+const { createRow, createRowWithoutExtraTimestamp } = require('../../../../app/inbound/handle-event/create-row')
 describe('create-row', () => {
   describe('createRow', () => {
     test('should create a row', () => {
@@ -59,6 +59,37 @@ describe('create-row', () => {
       const [, timestamp] = row.rowKey.split('|')
 
       expect(timestamp).not.toBe('NaN')
+    })
+  })
+
+  describe('createRowWithoutExtraTimestamp', () => {
+    test('should create a row', () => {
+      const row = createRowWithoutExtraTimestamp('ED123', '2024-02-15', 'event.external', {
+        id: 'abcd',
+        time: '2024-04-09',
+        partitionKey: 'dog_ED123',
+        data: { message: { actioningUser: { username: 'internal-user', displayname: 'User, Internal' }, details: { pk: 'ED123' } } }
+      })
+      expect(row).toEqual({
+        id: 'abcd',
+        time: '2024-04-09',
+        rowKey: '2024-02-15',
+        category: 'event.external',
+        partitionKey: 'dog_ED123',
+        data: '{"message":{"actioningUser":{"username":"internal-user","displayname":"User, Internal"},"details":{"pk":"ED123"}}}'
+      })
+    })
+    test('should create a row given no data exists', () => {
+      const row = createRowWithoutExtraTimestamp('ED123', '2024-02-15', 'event.external', {
+        partitionKey: 'dog_ED123'
+      })
+
+      expect(row).toEqual({
+        rowKey: '2024-02-15',
+        category: 'event.external',
+        partitionKey: 'dog_ED123',
+        data: undefined
+      })
     })
   })
 })
