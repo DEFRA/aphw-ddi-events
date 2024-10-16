@@ -8,7 +8,7 @@ const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
 
     let filterText
     if (queryType === 'search') {
-      filterText = constructSearchFilter(pks, fromDate, toDate)
+      filterText = constructSearchFilter(pks.split(','), fromDate, toDate)
     } else if (queryType === 'date') {
       filterText = constructDateFilter(pks, fromDate, toDate)
     } else if (queryType === 'dog') {

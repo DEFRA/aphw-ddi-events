@@ -1,7 +1,13 @@
 const constructSearchFilter = (pks, fromDate, toDate) => {
   const localFromDate = fromDate && fromDate !== '' ? fromDate : ''
   const localToDate = toDate && toDate !== '' ? toDate : ''
-  const queries = pks.map(x => `RowKey gt '${x.trim()}|${localFromDate}' and RowKey lt '${x.trim()}|${localToDate}'`)
+  const queries = pks.map(pk => {
+    // A 'like' query achieved by using a range of 'string1 to string2' where string2 has its last digit has its ascii code incremented by 1
+    const lowerLimit = `${pk.trim()}|${localFromDate}`
+    const upperLimit = `${pk.trim()}|${localToDate}`
+    const upperLimitShifted = upperLimit.substring(0, upperLimit.length - 1) + String.fromCharCode(upperLimit.charCodeAt(upperLimit.length - 1) + 1)
+    return `RowKey ge '${lowerLimit}' and RowKey lt '${upperLimitShifted}'`
+  })
   return 'PartitionKey eq \'search\' and ((' + queries.join(') or (') + '))'
 }
 

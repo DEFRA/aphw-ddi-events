@@ -59,7 +59,21 @@ describe('ExternalEvents repo', () => {
     })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('search', ['smith'])
+    const events = await getExternalEvents('search', 'smith')
+
+    expect(events).toHaveLength(4)
+  })
+
+  test('getExternalEvents should return events for search, multiple pks', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
+    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
+
+    const events = await getExternalEvents('search', 'smith,jones')
 
     expect(events).toHaveLength(4)
   })
