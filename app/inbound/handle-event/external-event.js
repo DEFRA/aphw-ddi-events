@@ -17,9 +17,11 @@ const saveExternalEvent = async (eventWithPk) => {
 
     await createIfNotExists(client, createDateEntity(event))
 
-    const entities = createDogEntitiesFromOwner(event)
-    for (const entity of entities) {
-      await createIfNotExists(client, entity)
+    if (event.type?.endsWith('.external.view.owner')) {
+      const entities = createDogEntitiesFromOwner(event)
+      for (const entity of entities) {
+        await createIfNotExists(client, entity)
+      }
     }
   } else if (event.type?.endsWith('.external.view.dog') || event.type?.endsWith('.external.view.dog.activity')) {
     await createIfNotExists(client, createUserEntity(getUsername(event), event))
