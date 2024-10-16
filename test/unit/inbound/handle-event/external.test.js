@@ -49,7 +49,7 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[1][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[1][1]).toEqual({
-        partitionKey: 'viewowner_P-123-456',
+        partitionKey: 'owner_P-123-456',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
@@ -101,7 +101,7 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[1][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[1][1]).toEqual({
-        partitionKey: 'viewdog_ED12345',
+        partitionKey: 'dog_ED12345',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,

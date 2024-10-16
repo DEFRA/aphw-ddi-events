@@ -22,7 +22,6 @@ module.exports = {
       }
     },
     handler: async (request, h) => {
-      console.log('JB1 handler')
       const {
         queryType,
         fromDate,
@@ -30,13 +29,8 @@ module.exports = {
         pks
       } = request.query
 
-      console.log('JB1 queryType', queryType)
-      console.log('JB1 pks', pks)
-      console.log('JB1 fromDate', fromDate)
-      console.log('JB1 toDate', toDate)
       const results = await getExternalEvents(queryType, pks, fromDate, toDate)
 
-      console.log('results', results)
       return h.response({
         results
       }).code(200)

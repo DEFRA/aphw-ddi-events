@@ -1,4 +1,4 @@
-const { eventsAsyncIterator: mockEventsIterator } = require('../../mocks/events')
+const { eventsFromTable } = require('../../mocks/events')
 
 describe('ExternalEvents repo', () => {
   const { getExternalEvents } = require('../../../app/repos/external-events')
@@ -22,24 +22,41 @@ describe('ExternalEvents repo', () => {
     process.env.AZURE_STORAGE_USE_CONNECTION_STRING = 'true'
   })
 
-  /*
-  test('getExternalEvents should return events for viewDog', async () => {
+  test('getExternalEvents should return events for dog', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('viewDog', ['ED1'])
+    const events = await getExternalEvents('dog', ['ED1'])
 
     expect(events).toHaveLength(4)
   })
-  */
-  test('getExternalEvents should return events for viewOwner', async () => {
+
+  test('getExternalEvents should return events for owner', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('viewOwner', ['P-123-456'])
+    const events = await getExternalEvents('owner', ['P-123-456'])
 
     expect(events).toHaveLength(4)
   })
 
   test('getExternalEvents should return events for search', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('search', ['smith'])
@@ -48,6 +65,12 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for user', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('user', ['john@here.com'])
@@ -56,6 +79,12 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for date', async () => {
+    const mockEventsIterator = (async function * () {
+      yield eventsFromTable[0]
+      yield eventsFromTable[1]
+      yield eventsFromTable[2]
+      yield eventsFromTable[3]
+    })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('date', [], '2024-05-05', '2024-10-10')
@@ -66,7 +95,7 @@ describe('ExternalEvents repo', () => {
   test('getEvents should throw if error', async () => {
     getClient.mockReturnValue()
 
-    await expect(getExternalEvents('viewDog', ['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
+    await expect(getExternalEvents('dog', ['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
   })
   describe('mapEntity', () => {
     test('should not be case sensitive', () => {

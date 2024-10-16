@@ -1,6 +1,6 @@
 const { EXTERNAL_EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
-const { constructSearchFilter, constructDateFilter, constructViewDogFilter, constructViewOwnerFilter, constructUserFilter } = require('./external-events-query-builder')
+const { constructSearchFilter, constructDateFilter, constructDogFilter, constructOwnerFilter, constructUserFilter } = require('./external-events-query-builder')
 
 const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
   try {
@@ -11,10 +11,10 @@ const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
       filterText = constructSearchFilter(pks, fromDate, toDate)
     } else if (queryType === 'date') {
       filterText = constructDateFilter(pks, fromDate, toDate)
-    } else if (queryType === 'viewDog') {
-      filterText = constructViewDogFilter(pks, fromDate, toDate)
-    } else if (queryType === 'viewOwner') {
-      filterText = constructViewOwnerFilter(pks, fromDate, toDate)
+    } else if (queryType === 'dog') {
+      filterText = constructDogFilter(pks, fromDate, toDate)
+    } else if (queryType === 'owner') {
+      filterText = constructOwnerFilter(pks, fromDate, toDate)
     } else if (queryType === 'user') {
       filterText = constructUserFilter(pks, fromDate, toDate)
     }

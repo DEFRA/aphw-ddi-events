@@ -13,24 +13,24 @@ describe('External-events endpoint', () => {
     await server.initialize()
   })
 
-  test('GET /external-events?queryType=viewDog&pks=ED1 route returns 200', async () => {
+  test('GET /external-events?queryType=dog&pks=ED1 route returns 200', async () => {
     getExternalEvents.mockResolvedValue(mockEvents)
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=viewDog&pks=ED1'
+      url: '/external-events?queryType=dog&pks=ED1'
     }
 
     const response = await server.inject(options)
     expect(response.statusCode).toBe(200)
   })
 
-  test('GET /external-events?queryType=viewDog&pks=ED2 route returns events', async () => {
+  test('GET /external-events?queryType=dog&pks=ED2 route returns events', async () => {
     getExternalEvents.mockResolvedValue(mockEvents)
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=viewDog&pks=ED2'
+      url: '/external-events?queryType=dog&pks=ED2'
     }
 
     const response = await server.inject(options)
@@ -66,7 +66,7 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=viewOwner&pks=P-123-456'
+      url: '/external-events?queryType=owner&pks=P-123-456'
     }
 
     const response = await server.inject(options)
@@ -87,12 +87,13 @@ describe('External-events endpoint', () => {
     expect(response.statusCode).toBe(400)
   })
 
-  test('GET /external-events route returns 400 if missing params2', async () => {
-    getExternalEvents.mockResolvedValue(mockEvents)
+  test('GET /external-events route returns 400 if missing values in response', async () => {
+    const badResponse = {}
+    getExternalEvents.mockResolvedValue(badResponse)
 
     const options = {
       method: 'GET',
-      url: '/external-events?pks='
+      url: '/external-events?queryType=dog&pks=ED1'
     }
 
     const response = await server.inject(options)

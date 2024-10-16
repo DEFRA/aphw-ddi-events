@@ -11,11 +11,11 @@ const createUserEntity = (username, event) => {
 }
 
 const createDogEntity = (pk, event) => {
-  return createRowWithoutExtraTimestamp(`viewdog_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp(`dog_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createOwnerEntity = (pk, event) => {
-  return createRowWithoutExtraTimestamp(`viewowner_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp(`owner_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createDateEntity = (event) => {
