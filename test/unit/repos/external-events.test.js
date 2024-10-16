@@ -111,4 +111,10 @@ describe('ExternalEvents repo', () => {
 
     await expect(getExternalEvents('dog', ['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
   })
+
+  test('getEvents should throw if invalid queryType', async () => {
+    getClient.mockReturnValue()
+
+    await expect(getExternalEvents('invalid', ['ED1'])).rejects.toThrow('Not implemented')
+  })
 })

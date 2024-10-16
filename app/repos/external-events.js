@@ -17,6 +17,8 @@ const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
       filterText = constructOwnerFilter(pks, fromDate, toDate)
     } else if (queryType === 'user') {
       filterText = constructUserFilter(pks, fromDate, toDate)
+    } else {
+      throw new Error('Not implemented')
     }
 
     const entities = client.listEntities({
