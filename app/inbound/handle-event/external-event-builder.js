@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const { createRow } = require('./create-row')
+const { createRowWithoutExtraTimestamp } = require('./create-row')
 const { EXTERNAL_EVENT } = require('../../constants/event-types')
 
 const getTimeString = () => {
@@ -7,23 +7,23 @@ const getTimeString = () => {
 }
 
 const createUserEntity = (username, event) => {
-  return createRow(`user_${username}`, uuidv4(), EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp(`user_${username}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createDogEntity = (pk, event) => {
-  return createRow(`dog_${pk}`, uuidv4(), EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp(`viewdog_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createOwnerEntity = (pk, event) => {
-  return createRow(`owner_${pk}`, uuidv4(), EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp(`viewowner_${pk}`, `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createDateEntity = (event) => {
-  return createRow('date', `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp('date', `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createSearchEntity = (term, event) => {
-  return createRow('search', `${term.toLowerCase()}|${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
+  return createRowWithoutExtraTimestamp('search', `${term.toLowerCase()}|${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createSearchEntities = (event) => {
