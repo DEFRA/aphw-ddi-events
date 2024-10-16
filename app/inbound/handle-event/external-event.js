@@ -10,7 +10,7 @@ const saveExternalEvent = async (eventWithPk) => {
 
   const client = await getClient(EXTERNAL_EVENT)
 
-  if (event.type?.endsWith('.external.view.owner')) {
+  if (event.type?.endsWith('.external.view.owner') || event.type?.endsWith('.external.view.owner.activity')) {
     await createIfNotExists(client, createUserEntity(getUsername(event), event))
 
     await createIfNotExists(client, createOwnerEntity(origPk, event))
@@ -21,7 +21,7 @@ const saveExternalEvent = async (eventWithPk) => {
     for (const entity of entities) {
       await createIfNotExists(client, entity)
     }
-  } else if (event.type?.endsWith('.external.view.dog')) {
+  } else if (event.type?.endsWith('.external.view.dog') || event.type?.endsWith('.external.view.dog.activity')) {
     await createIfNotExists(client, createUserEntity(getUsername(event), event))
 
     await createIfNotExists(client, createDogEntity(origPk, event))
@@ -33,18 +33,6 @@ const saveExternalEvent = async (eventWithPk) => {
     for (const entity of entities) {
       await createIfNotExists(client, entity)
     }
-  } else if (event.type?.endsWith('.external.view.owner.activity')) {
-    await createIfNotExists(client, createUserEntity(getUsername(event), event))
-
-    await createIfNotExists(client, createOwnerEntity(origPk, event))
-
-    await createIfNotExists(client, createDateEntity(event))
-  } else if (event.type?.endsWith('.external.view.dog.activity')) {
-    await createIfNotExists(client, createUserEntity(getUsername(event), event))
-
-    await createIfNotExists(client, createDogEntity(origPk, event))
-
-    await createIfNotExists(client, createDateEntity(event))
   }
 }
 
