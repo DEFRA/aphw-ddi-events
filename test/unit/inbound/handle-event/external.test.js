@@ -58,14 +58,13 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[2][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[2][1]).toEqual({
-        partitionKey: expect.anything(),
+        partitionKey: 'date',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.view.owner',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"dogIndexNumbers\\":[\\"ED12345\\",\\"ED23456\\"],\\"pk\\":\\"P-123-456\\"}}"}'
       })
-      expect(createIfNotExists.mock.calls[2][1].partitionKey.startsWith('date_')).toBeTruthy()
     })
 
     test('should save an external event of type view.dog', async () => {
@@ -111,14 +110,13 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[2][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[2][1]).toEqual({
-        partitionKey: expect.anything(),
+        partitionKey: 'date',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.view.dog',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"pk\\":\\"ED12345\\"}}"}'
       })
-      expect(createIfNotExists.mock.calls[2][1].partitionKey.startsWith('date_')).toBeTruthy()
     })
 
     test('should save an external event of type search - single term', async () => {
@@ -146,13 +144,14 @@ describe('external', () => {
       expect(createIfNotExists.mock.calls).toHaveLength(3)
       expect(createIfNotExists.mock.calls[0][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[0][1]).toEqual({
-        partitionKey: 'search_smith',
+        partitionKey: 'search',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"Smith\\"}}"}'
       })
+      expect(createIfNotExists.mock.calls[0][1].rowKey.startsWith('smith|')).toBeTruthy()
       expect(createIfNotExists.mock.calls[1][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[1][1]).toEqual({
         partitionKey: 'user_john@email.com',
@@ -164,14 +163,13 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[2][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[2][1]).toEqual({
-        partitionKey: expect.anything(),
+        partitionKey: 'date',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"Smith\\"}}"}'
       })
-      expect(createIfNotExists.mock.calls[2][1].partitionKey.startsWith('date_')).toBeTruthy()
     })
 
     test('should save an external event of type search - multiple terms', async () => {
@@ -199,31 +197,34 @@ describe('external', () => {
       expect(createIfNotExists.mock.calls).toHaveLength(5)
       expect(createIfNotExists.mock.calls[0][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[0][1]).toEqual({
-        partitionKey: 'search_john',
+        partitionKey: 'search',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"John Smith bruno\\"}}"}'
       })
+      expect(createIfNotExists.mock.calls[0][1].rowKey.startsWith('john|')).toBeTruthy()
       expect(createIfNotExists.mock.calls[1][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[1][1]).toEqual({
-        partitionKey: 'search_smith',
+        partitionKey: 'search',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"John Smith bruno\\"}}"}'
       })
+      expect(createIfNotExists.mock.calls[1][1].rowKey.startsWith('smith|')).toBeTruthy()
       expect(createIfNotExists.mock.calls[2][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[2][1]).toEqual({
-        partitionKey: 'search_bruno',
+        partitionKey: 'search',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"John Smith bruno\\"}}"}'
       })
+      expect(createIfNotExists.mock.calls[2][1].rowKey.startsWith('bruno|')).toBeTruthy()
       expect(createIfNotExists.mock.calls[3][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[3][1]).toEqual({
         partitionKey: 'user_john@email.com',
@@ -235,14 +236,13 @@ describe('external', () => {
       })
       expect(createIfNotExists.mock.calls[4][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[4][1]).toEqual({
-        partitionKey: expect.anything(),
+        partitionKey: 'date',
         rowKey: expect.anything(),
         time: 1728916381110,
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.search',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"searchTerms\\":\\"John Smith bruno\\"}}"}'
       })
-      expect(createIfNotExists.mock.calls[4][1].partitionKey.startsWith('date_')).toBeTruthy()
     })
   })
 })

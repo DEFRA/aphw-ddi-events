@@ -2,6 +2,10 @@ const { v4: uuidv4 } = require('uuid')
 const { createRow } = require('./create-row')
 const { EXTERNAL_EVENT } = require('../../constants/event-types')
 
+const getTimeString = () => {
+  return new Date().toISOString()
+}
+
 const createUserEntity = (username, event) => {
   return createRow(`user_${username}`, uuidv4(), EXTERNAL_EVENT, event)
 }
@@ -15,11 +19,11 @@ const createOwnerEntity = (pk, event) => {
 }
 
 const createDateEntity = (event) => {
-  return createRow(`date_${new Date().getTime()}`, uuidv4(), EXTERNAL_EVENT, event)
+  return createRow('date', `${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createSearchEntity = (term, event) => {
-  return createRow(`search_${term.toLowerCase()}`, `${new Date().getTime()}_${uuidv4()}`, EXTERNAL_EVENT, event)
+  return createRow('search', `${term.toLowerCase()}|${getTimeString}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
 const createSearchEntities = (event) => {
