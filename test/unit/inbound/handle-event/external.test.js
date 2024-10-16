@@ -37,7 +37,7 @@ describe('external', () => {
       await saveExternalEvent(event)
 
       expect(getClient).toHaveBeenCalledWith(EXTERNAL_EVENT)
-      expect(createIfNotExists.mock.calls).toHaveLength(3)
+      expect(createIfNotExists.mock.calls).toHaveLength(5)
       expect(createIfNotExists.mock.calls[0][0]).toBe(clientMock)
       expect(createIfNotExists.mock.calls[0][1]).toEqual({
         partitionKey: 'user_john@email.com',
@@ -64,6 +64,24 @@ describe('external', () => {
         category: EXTERNAL_EVENT,
         type: 'uk.gov.defra.ddi.event.external.view.owner',
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"dogIndexNumbers\\":[\\"ED12345\\",\\"ED23456\\"],\\"pk\\":\\"P-123-456\\"}}"}'
+      })
+      expect(createIfNotExists.mock.calls[3][0]).toBe(clientMock)
+      expect(createIfNotExists.mock.calls[3][1]).toEqual({
+        partitionKey: 'dog_ED12345',
+        rowKey: expect.anything(),
+        time: 1728916381110,
+        category: EXTERNAL_EVENT,
+        type: 'uk.gov.defra.ddi.event.external.view.dog',
+        data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"pk\\":\\"ED12345\\",\\"source\\":\\"view-owner-P-123-456\\"}}"}'
+      })
+      expect(createIfNotExists.mock.calls[4][0]).toBe(clientMock)
+      expect(createIfNotExists.mock.calls[4][1]).toEqual({
+        partitionKey: 'dog_ED23456',
+        rowKey: expect.anything(),
+        time: 1728916381110,
+        category: EXTERNAL_EVENT,
+        type: 'uk.gov.defra.ddi.event.external.view.dog',
+        data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"pk\\":\\"ED23456\\",\\"source\\":\\"view-owner-P-123-456\\"}}"}'
       })
     })
 
