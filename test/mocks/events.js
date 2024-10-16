@@ -364,5 +364,6 @@ const eventsAsyncIterator = (async function * () {
 
 module.exports = {
   eventsForRouteTests,
+  eventsFromTable,
   eventsAsyncIterator
 }

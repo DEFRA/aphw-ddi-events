@@ -19,9 +19,9 @@ const purgeEvent = {
 }
 
 const externalEvent = {
-  partitionKey: 'ED300038',
+  partitionKey: 'P-123-456',
   type: 'uk.gov.defra.ddi.event.external.view.owner',
-  message: '{"actioningUser":{"username":"overnight-job-system-user","displayname":"Overnight Job System User"},"operation":"viewed owner"'
+  message: '{"actioningUser":{"username":"overnight-job-system-user","displayname":"Overnight Job System User"},"details":{"dogIndexNumbers": ["ED12345", "23456"]}}"'
 }
 
 describe('handle event', () => {
