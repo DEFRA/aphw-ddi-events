@@ -1,6 +1,4 @@
 const { portalHeader, enforcementHeader } = require('../../../mocks/jwt')
-const { getEvents } = require('../../../../app/repos/events')
-const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 describe('Events endpoint', () => {
   const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 
