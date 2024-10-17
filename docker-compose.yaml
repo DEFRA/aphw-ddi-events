@@ -19,6 +19,9 @@ services:
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://aphw-ddi-event-store-azurite:10002/devstoreaccount1;
       AZURE_STORAGE_ACCOUNT_NAME: devstoreaccount1
+      PORTAL_PUBLIC_KEY: ${PORTAL_PUBLIC_KEY}
+      ENFORCEMENT_PUBLIC_KEY: ${ENFORCEMENT_PUBLIC_KEY}
+      PERMITTED_DOMAINS: ${PERMITTED_DOMAINS}
 
   aphw-ddi-event-store-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.23.0

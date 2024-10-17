@@ -1,5 +1,6 @@
 const { ResourceNotFoundError } = require('../../../../app/errors/resourceNotFound')
 const { DuplicateResourceError } = require('../../../../app/errors/duplicateResourceError')
+const { enforcementHeader, portalHeader, portalStandardHeader } = require('../../../mocks/jwt')
 
 const validUser = {
   username: 'valid-user',
@@ -31,7 +32,8 @@ describe('Users endpoint', () => {
 
       const options = {
         method: 'GET',
-        url: '/users'
+        url: '/users',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -55,12 +57,26 @@ describe('Users endpoint', () => {
 
       const options = {
         method: 'GET',
-        url: '/users'
+        url: '/users',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
 
       expect(response.statusCode).toBe(500)
+    })
+
+    test('GET /users route returns 403 if called from enforcement', async () => {
+      getPseudonyms.mockResolvedValue(mockUsers)
+
+      const options = {
+        method: 'GET',
+        url: '/users',
+        ...enforcementHeader
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(403)
     })
   })
 
@@ -79,7 +95,8 @@ describe('Users endpoint', () => {
         payload: {
           username: 'internal-system',
           pseudonym: 'Hal 3000'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -103,7 +120,8 @@ describe('Users endpoint', () => {
         payload: {
           username: 'internal-system',
           pseudonym: 'Hal 3000'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -124,7 +142,8 @@ describe('Users endpoint', () => {
         payload: {
           username: 'internal-system',
           pseudonym: 'Hal 3000'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -145,7 +164,8 @@ describe('Users endpoint', () => {
         payload: {
           username: 'john.adams',
           pseudonym: 'John'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -166,11 +186,40 @@ describe('Users endpoint', () => {
         payload: {
           username: 'internal-system',
           pseudonym: 'Hal 3000'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(500)
+    })
+
+    test('POST /users route returns 403 given call from enforcement', async () => {
+      const options = {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          pseudonym: 'Hal 3000'
+        },
+        ...enforcementHeader
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(403)
+    })
+
+    test('POST /users route returns 403 given call by standard user', async () => {
+      const options = {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          pseudonym: 'Hal 3000'
+        },
+        ...portalStandardHeader
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(403)
     })
 
     test('POST /users route returns 400 given no username exists', async () => {
@@ -179,7 +228,8 @@ describe('Users endpoint', () => {
         url: '/users',
         payload: {
           pseudonym: 'Hal 3000'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -192,7 +242,8 @@ describe('Users endpoint', () => {
         url: '/users',
         payload: {
           username: 'internal-system'
-        }
+        },
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -204,7 +255,8 @@ describe('Users endpoint', () => {
     test('DELETE /users returns a 204', async () => {
       const options = {
         method: 'DELETE',
-        url: '/users/Cassie.Bartell71'
+        url: '/users/Cassie.Bartell71',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -217,7 +269,8 @@ describe('Users endpoint', () => {
       removeUser.mockRejectedValue(new ResourceNotFoundError('Username not found'))
       const options = {
         method: 'DELETE',
-        url: '/users/Cassie.Bartell71'
+        url: '/users/Cassie.Bartell71',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -230,7 +283,8 @@ describe('Users endpoint', () => {
       removeUser.mockRejectedValue(new Error('Server errro'))
       const options = {
         method: 'DELETE',
-        url: '/users/Cassie.Bartell71'
+        url: '/users/Cassie.Bartell71',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
@@ -241,12 +295,35 @@ describe('Users endpoint', () => {
     test('DELETE /users returns a 404 given username is missing', async () => {
       const options = {
         method: 'DELETE',
-        url: '/users'
+        url: '/users',
+        ...portalHeader
       }
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(404)
       expect(removeUser).not.toHaveBeenCalled()
+    })
+
+    test('DELETE /users returns a 403 given enforcement call', async () => {
+      const options = {
+        method: 'DELETE',
+        url: '/users/Cassie.Bartell71',
+        ...enforcementHeader
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(403)
+    })
+
+    test('DELETE /users returns a 403 given standard call', async () => {
+      const options = {
+        method: 'DELETE',
+        url: '/users/Cassie.Bartell71',
+        ...portalStandardHeader
+      }
+
+      const response = await server.inject(options)
+      expect(response.statusCode).toBe(403)
     })
   })
 
