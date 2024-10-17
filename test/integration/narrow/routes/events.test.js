@@ -1,4 +1,6 @@
 const { portalHeader, enforcementHeader } = require('../../../mocks/jwt')
+const { getEvents } = require('../../../../app/repos/events')
+const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 describe('Events endpoint', () => {
   const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 
@@ -118,6 +120,18 @@ describe('Events endpoint', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).toBe(400)
+  })
+
+  test('GET /events?pks=ED1 route returns 401 without JWT', async () => {
+    getEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/events?pks=ED1'
+    }
+
+    const response = await server.inject(options)
+    expect(response.statusCode).toBe(401)
   })
 
   afterEach(async () => {
