@@ -31,7 +31,7 @@ describe('ExternalEvents repo', () => {
     })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('dog', ['ED1'])
+    const events = await getExternalEvents('dog', 'ED1')
 
     expect(events).toHaveLength(4)
   })
@@ -45,7 +45,7 @@ describe('ExternalEvents repo', () => {
     })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('owner', ['P-123-456'])
+    const events = await getExternalEvents('owner', 'P-123-456')
 
     expect(events).toHaveLength(4)
   })
@@ -87,7 +87,7 @@ describe('ExternalEvents repo', () => {
     })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('user', ['john@here.com'])
+    const events = await getExternalEvents('user', 'john@here.com')
 
     expect(events).toHaveLength(4)
   })
@@ -101,7 +101,7 @@ describe('ExternalEvents repo', () => {
     })()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
-    const events = await getExternalEvents('date', [], '2024-05-05', '2024-10-10')
+    const events = await getExternalEvents('date', '', '2024-05-05', '2024-10-10')
 
     expect(events).toHaveLength(4)
   })
@@ -109,12 +109,12 @@ describe('ExternalEvents repo', () => {
   test('getEvents should throw if error', async () => {
     getClient.mockReturnValue()
 
-    await expect(getExternalEvents('dog', ['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
+    await expect(getExternalEvents('dog', 'ED1')).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
   })
 
   test('getEvents should throw if invalid queryType', async () => {
     getClient.mockReturnValue()
 
-    await expect(getExternalEvents('invalid', ['ED1'])).rejects.toThrow('Not implemented')
+    await expect(getExternalEvents('invalid', 'ED1')).rejects.toThrow('Not implemented')
   })
 })
