@@ -9,7 +9,7 @@ const jsonArray = Joi.extend({
     method (value) {
       if (
         typeof value !== 'string' ||
-        value[0] !== '[' && !/^\s*\[/.test(value)
+        (value[0] !== '[' && !/^\s*\[/.test(value))
       ) {
         return
       }
@@ -27,7 +27,7 @@ const schema = Joi.object({
     portalKey: Joi.string().required(),
     enforcementKey: Joi.string().required()
   }),
-  permittedDomains: jsonArray.array().items(Joi.string().domain()).default([])
+  permittedDomains: jsonArray.array().items(Joi.string().pattern(/^[a-z0-9.@]+([-.][a-z0-9]+)*\.[a-z]{2,6}$/)).default([])
 })
 
 // Build config

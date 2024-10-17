@@ -24,7 +24,7 @@ describe('index config', () => {
       }
       return getEnvironmentVariable(envVar)
     })
-    expect(() => require('../../../app/config/auth.js')).toThrow('The server API config is invalid. "permittedDomains[0]" must contain a valid domain name')
+    expect(() => require('../../../app/config/auth.js')).toThrow('The server API config is invalid. "permittedDomains[0]" with value "adfdafdf" fails to match the required pattern: /^[a-z0-9.@]+([-.][a-z0-9]+)*\\.[a-z]{2,6}$/')
   })
 
   test('should fail validation if invalid', () => {
