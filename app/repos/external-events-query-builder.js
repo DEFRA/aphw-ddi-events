@@ -3,8 +3,8 @@ const constructSearchFilter = (pks, fromDate, toDate) => {
   const localToDate = toDate && toDate !== '' ? toDate : ''
   const queries = pks.map(pk => {
     // A 'like' query achieved by using a range of 'string1 to string2' where string2 has its last digit has its ascii code incremented by 1
-    const lowerLimit = `${pk.trim()}|${localFromDate}`
-    const upperLimit = `${pk.trim()}|${localToDate}`
+    const lowerLimit = `${pk.trim().toLowerCase()}|${localFromDate}`
+    const upperLimit = `${pk.trim().toLowerCase()}|${localToDate}`
     const upperLimitShifted = upperLimit.substring(0, upperLimit.length - 1) + String.fromCharCode(upperLimit.charCodeAt(upperLimit.length - 1) + 1)
     return `RowKey ge '${lowerLimit}' and RowKey lt '${upperLimitShifted}'`
   })
@@ -16,7 +16,7 @@ const constructDateFilter = (_pk, fromDate, toDate) => {
 }
 
 const constructDogFilter = (pk, fromDate, toDate) => {
-  let query = `PartitionKey eq 'dog_${pk}'`
+  let query = `PartitionKey eq 'dog_${pk.toUpperCase()}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
@@ -27,7 +27,7 @@ const constructDogFilter = (pk, fromDate, toDate) => {
 }
 
 const constructOwnerFilter = (pk, fromDate, toDate) => {
-  let query = `PartitionKey eq 'owner_${pk}'`
+  let query = `PartitionKey eq 'owner_${pk.toUpperCase()}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
@@ -38,7 +38,7 @@ const constructOwnerFilter = (pk, fromDate, toDate) => {
 }
 
 const constructUserFilter = (pk, fromDate, toDate) => {
-  let query = `PartitionKey eq 'user_${pk}'`
+  let query = `PartitionKey eq 'user_${pk.toLowerCase()}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
