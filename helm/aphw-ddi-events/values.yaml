@@ -37,6 +37,9 @@ container:
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
   azureStorageAccountName: dangerousdogindex
+  publicKeyPortal: dummy
+  publicKeyEnforcement: dummy
+  permittedDomains: "[]"
 
 livenessProbe:
   path: /healthz
