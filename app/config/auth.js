@@ -9,7 +9,7 @@ const jsonArray = Joi.extend({
     method (value) {
       if (
         typeof value !== 'string' ||
-        (value[0] !== '[' && !/^\s*\[/.test(value))
+        (value.startsWith('[') && !/^\s*\[/.test(value))
       ) {
         return
       }

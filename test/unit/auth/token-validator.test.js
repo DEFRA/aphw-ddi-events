@@ -13,6 +13,23 @@ describe('token-validator', () => {
       expect(validation).toEqual({ isValid: false, credentials: { id: null, user: null, displayname: null, scope: [] } })
     })
 
+    test('should not validate if issuer is not on allow list', async () => {
+      const validation = await validate({
+        decoded: {
+          payload: {
+            username: 'william.shakespeare@theglobe.co.uk',
+            displayname: 'William Shakespeare',
+            exp: expect.any(Number),
+            iat: expect.any(Number),
+            scope: ['Dog.Index.Admin'],
+            iss: 'unknown-issuer'
+          }
+        }
+      })
+
+      expect(validation).toEqual({ isValid: false, credentials: { id: null, user: null, displayname: null, scope: [] } })
+    })
+
     describe('aphw-ddi-portal', () => {
       test('should successfully validate with aphw-ddi-portal call', async () => {
         const artifacts = {
