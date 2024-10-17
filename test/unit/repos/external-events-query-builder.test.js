@@ -21,36 +21,36 @@ describe('ExternalEventsQueryBuilder', () => {
 
   describe('constructUserFilter', () => {
     test('returns correct query when dates supplied', () => {
-      const query = constructUserFilter(['john@here.com'], '2024-05-05', '2024-10-10')
+      const query = constructUserFilter('john@here.com', '2024-05-05', '2024-10-10')
       expect(query).toBe('PartitionKey eq \'user_john@here.com\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
     })
 
     test('returns correct query when no dates', () => {
-      const query = constructUserFilter(['john@here.com'])
+      const query = constructUserFilter('john@here.com')
       expect(query).toBe('PartitionKey eq \'user_john@here.com\'')
     })
   })
 
   describe('constructDogFilter', () => {
     test('returns correct query when dates supplied', () => {
-      const query = constructDogFilter(['ED1'], '2024-05-05', '2024-10-10')
+      const query = constructDogFilter('ED1', '2024-05-05', '2024-10-10')
       expect(query).toBe('PartitionKey eq \'dog_ED1\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
     })
 
     test('returns correct query when no dates', () => {
-      const query = constructDogFilter(['ED1'])
+      const query = constructDogFilter('ED1')
       expect(query).toBe('PartitionKey eq \'dog_ED1\'')
     })
   })
 
   describe('constructOwnerFilter', () => {
     test('returns correct query when dates supplied', () => {
-      const query = constructOwnerFilter(['P-123-456'], '2024-05-05', '2024-10-10')
+      const query = constructOwnerFilter('P-123-456', '2024-05-05', '2024-10-10')
       expect(query).toBe('PartitionKey eq \'owner_P-123-456\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
     })
 
     test('returns correct query when no dates', () => {
-      const query = constructOwnerFilter(['P-123-456'])
+      const query = constructOwnerFilter('P-123-456')
       expect(query).toBe('PartitionKey eq \'owner_P-123-456\'')
     })
   })
