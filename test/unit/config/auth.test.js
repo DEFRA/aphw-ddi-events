@@ -20,7 +20,7 @@ describe('index config', () => {
   test('should not fail validation if PERMITTED_DOMAINS is a JSON array with domains or emails', () => {
     getEnvironmentVariableMock.mockImplementation(envVar => {
       if (envVar === 'PERMITTED_DOMAINS') {
-        return '.example.com;@example.com'
+        return '.example.com,@example.com'
       }
       return getEnvironmentVariable(envVar)
     })

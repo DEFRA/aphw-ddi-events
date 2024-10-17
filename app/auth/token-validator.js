@@ -31,7 +31,7 @@ const validateEnforcement = async (username, payload) => {
   }
 
   // Should only permit valid email domains
-  if (!authConfig.permittedDomains.split(';').some(permittedDomain => username.includes(permittedDomain))) {
+  if (!authConfig.permittedDomains.split(',').some(permittedDomain => username.includes(permittedDomain))) {
     return returnVal(false)
   }
 
