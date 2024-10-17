@@ -39,7 +39,7 @@ container:
   azureStorageAccountName: dangerousdogindex
   publicKeyPortal: dummy
   publicKeyEnforcement: dummy
-  permittedDomains: "[]"
+  permittedDomains: dummy
 
 livenessProbe:
   path: /healthz

@@ -1,33 +1,13 @@
 const Joi = require('joi')
 const { getEnvironmentVariable } = require('../lib/environment-helpers')
 
-const jsonArray = Joi.extend({
-  type: 'array',
-  base: Joi.array(),
-  coerce: {
-    from: 'string',
-    method (value) {
-      if (
-        typeof value !== 'string' ||
-        (value.startsWith('[') && !/^\s*\[/.test(value))
-      ) {
-        return
-      }
-
-      try {
-        return { value: JSON.parse(value) }
-      } catch (ignoreErr) { }
-    }
-  }
-})
-
 // Define config schema
 const schema = Joi.object({
   authTokens: Joi.object({
     portalKey: Joi.string().required(),
     enforcementKey: Joi.string().required()
   }),
-  permittedDomains: jsonArray.array().items(Joi.string().pattern(/^[a-z0-9.@]+([-.][a-z0-9]+)*\.[a-z]{2,6}$/)).default([])
+  permittedDomains: Joi.string().required()
 })
 
 // Build config
