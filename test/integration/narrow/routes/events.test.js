@@ -1,3 +1,4 @@
+const { portalHeader, enforcementHeader } = require('../../../mocks/jwt')
 describe('Events endpoint', () => {
   const { eventsForRouteTests: mockEvents } = require('../../../mocks/events')
 
@@ -13,12 +14,26 @@ describe('Events endpoint', () => {
     await server.initialize()
   })
 
-  test('GET /events?pks=ED1 route returns 200', async () => {
+  test('GET /events?pks=ED1 route returns 200 with call from portal', async () => {
     getEvents.mockResolvedValue(mockEvents)
 
     const options = {
       method: 'GET',
-      url: '/events?pks=ED1'
+      url: '/events?pks=ED1',
+      ...portalHeader
+    }
+
+    const response = await server.inject(options)
+    expect(response.statusCode).toBe(200)
+  })
+
+  test('GET /events?pks=ED1 route returns 200 with call from enforcement', async () => {
+    getEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/events?pks=ED1',
+      ...enforcementHeader
     }
 
     const response = await server.inject(options)
@@ -30,7 +45,8 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events?pks=ED1'
+      url: '/events?pks=ED1',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -48,7 +64,8 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events?pks=ED1,ED2,ED3'
+      url: '/events?pks=ED1,ED2,ED3',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -66,7 +83,8 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events?pks=ED1'
+      url: '/events?pks=ED1',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -79,7 +97,8 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events'
+      url: '/events',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -92,7 +111,8 @@ describe('Events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/events?pks='
+      url: '/events?pks=',
+      ...portalHeader
     }
 
     const response = await server.inject(options)

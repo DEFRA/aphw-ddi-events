@@ -1,3 +1,4 @@
+const { enforcementHeader, portalHeader } = require('../../../mocks/jwt')
 describe('External-events endpoint', () => {
   const { externalEventsFromTable: mockEvents } = require('../../../mocks/external-events')
 
@@ -18,7 +19,8 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=dog&pks=ED1'
+      url: '/external-events?queryType=dog&pks=ED1',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -30,7 +32,8 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=dog&pks=ED2'
+      url: '/external-events?queryType=dog&pks=ED2',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -48,7 +51,8 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=search&pks=john,smith,bruno'
+      url: '/external-events?queryType=search&pks=john,smith,bruno',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -66,7 +70,8 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=owner&pks=P-123-456'
+      url: '/external-events?queryType=owner&pks=P-123-456',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
@@ -79,12 +84,27 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events'
+      url: '/external-events',
+      ...portalHeader
     }
 
     const response = await server.inject(options)
 
     expect(response.statusCode).toBe(400)
+  })
+
+  test('GET /external-events route returns 401 if called from enforcement', async () => {
+    getExternalEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/external-events?queryType=owner&pks=P-123-456',
+      ...enforcementHeader
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(403)
   })
 
   test('GET /external-events route returns 400 if missing values in response', async () => {
@@ -93,7 +113,8 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=dog&pks=ED1'
+      url: '/external-events?queryType=dog&pks=ED1',
+      ...portalHeader
     }
 
     const response = await server.inject(options)

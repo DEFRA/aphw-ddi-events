@@ -1,10 +1,12 @@
 const { getExternalEvents } = require('../repos/external-events')
 const { externalEventsQuerySchema, externalEventsResponseSchema } = require('../schemas/external-events')
+const { scopes } = require('../constants/auth')
 
 module.exports = {
   method: 'GET',
   path: '/external-events',
   options: {
+    auth: { scope: [scopes.admin] },
     validate: {
       query: externalEventsQuerySchema,
       failAction: (request, h, err) => {
