@@ -11,12 +11,12 @@ const constructSearchFilter = (pks, fromDate, toDate) => {
   return 'PartitionKey eq \'search\' and ((' + queries.join(') or (') + '))'
 }
 
-const constructDateFilter = (_pks, fromDate, toDate) => {
+const constructDateFilter = (_pk, fromDate, toDate) => {
   return `PartitionKey eq 'date' and RowKey gt '${fromDate}' and RowKey lt '${toDate}'`
 }
 
-const constructDogFilter = (pks, fromDate, toDate) => {
-  let query = `PartitionKey eq 'dog_${pks[0]}'`
+const constructDogFilter = (pk, fromDate, toDate) => {
+  let query = `PartitionKey eq 'dog_${pk}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
@@ -26,8 +26,8 @@ const constructDogFilter = (pks, fromDate, toDate) => {
   return query
 }
 
-const constructOwnerFilter = (pks, fromDate, toDate) => {
-  let query = `PartitionKey eq 'owner_${pks[0]}'`
+const constructOwnerFilter = (pk, fromDate, toDate) => {
+  let query = `PartitionKey eq 'owner_${pk}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
@@ -37,8 +37,8 @@ const constructOwnerFilter = (pks, fromDate, toDate) => {
   return query
 }
 
-const constructUserFilter = (pks, fromDate, toDate) => {
-  let query = `PartitionKey eq 'user_${pks[0]}'`
+const constructUserFilter = (pk, fromDate, toDate) => {
+  let query = `PartitionKey eq 'user_${pk}'`
   if (fromDate && fromDate !== '') {
     query += ` and RowKey gt '${fromDate}'`
   }
