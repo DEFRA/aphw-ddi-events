@@ -1,7 +1,7 @@
 # aphw-ddi-events
 
 Microservice to consume event updates from Dangerous Dogs Index and persist in event store.
-
+ 
 ```mermaid
 flowchart LR
 aphw-ddi-events(Kubernetes - aphw-ddi-events)
