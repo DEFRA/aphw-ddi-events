@@ -1,7 +1,7 @@
 # aphw-ddi-events
 
 Microservice to consume event updates from Dangerous Dogs Index and persist in event store.
- 
+
 ```mermaid
 flowchart LR
 aphw-ddi-events(Kubernetes - aphw-ddi-events)
@@ -16,7 +16,7 @@ aphw-ddi-events ==> storage-commets
 aphw-ddi-events ==> storage-warnings
 aphw-ddi-events ==> topic-alert
 ```
-
+ 
 ## Prerequisites
 
 - [Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)
