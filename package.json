@@ -1,6 +1,6 @@
 {
   "name": "aphw-ddi-events",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Event log",
   "homepage": "https://github.com/DEFRA/aphw-ddi-events",
   "main": "app/index.js",
