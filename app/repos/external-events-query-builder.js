@@ -48,10 +48,22 @@ const constructUserFilter = (pk, fromDate, toDate) => {
   return query
 }
 
+const constructLoginFilter = (_pk, fromDate, toDate) => {
+  let query = 'PartitionKey eq \'login\''
+  if (fromDate && fromDate !== '') {
+    query += ` and RowKey gt '${fromDate}'`
+  }
+  if (toDate && toDate !== '') {
+    query += ` and RowKey lt '${toDate}'`
+  }
+  return query
+}
+
 module.exports = {
   constructSearchFilter,
   constructDateFilter,
   constructDogFilter,
   constructOwnerFilter,
-  constructUserFilter
+  constructUserFilter,
+  constructLoginFilter
 }

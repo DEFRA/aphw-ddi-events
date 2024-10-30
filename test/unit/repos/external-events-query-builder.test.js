@@ -1,4 +1,7 @@
-const { constructDateFilter, constructSearchFilter, constructUserFilter, constructDogFilter, constructOwnerFilter } = require('../../../app/repos/external-events-query-builder')
+const {
+  constructDateFilter, constructSearchFilter, constructUserFilter, constructDogFilter, constructOwnerFilter,
+  constructLoginFilter
+} = require('../../../app/repos/external-events-query-builder')
 
 describe('ExternalEventsQueryBuilder', () => {
   describe('constructDateFilter', () => {
@@ -72,6 +75,23 @@ describe('ExternalEventsQueryBuilder', () => {
     test('returns correct query when no dates', () => {
       const query = constructOwnerFilter('P-123-456')
       expect(query).toBe('PartitionKey eq \'owner_P-123-456\'')
+    })
+  })
+
+  describe('constructLoginFilter', () => {
+    test('returns correct query when dates supplied', () => {
+      const query = constructLoginFilter('', '2024-05-05', '2024-10-10')
+      expect(query).toBe('PartitionKey eq \'login\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
+    })
+
+    test('returns correct query when lowercase reference', () => {
+      const query = constructLoginFilter('', '2024-05-05', '2024-10-10')
+      expect(query).toBe('PartitionKey eq \'login\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
+    })
+
+    test('returns correct query when no dates', () => {
+      const query = constructLoginFilter('')
+      expect(query).toBe('PartitionKey eq \'login\'')
     })
   })
 })

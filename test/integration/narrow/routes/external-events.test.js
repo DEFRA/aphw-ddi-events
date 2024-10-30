@@ -65,6 +65,25 @@ describe('External-events endpoint', () => {
     expect(results[3].rowKey).toBe('104')
   })
 
+  test('GET /external-events?queryType=search&pks=john,smith,bruno route returns events when multiple pks', async () => {
+    getExternalEvents.mockResolvedValue(mockEvents)
+
+    const options = {
+      method: 'GET',
+      url: '/external-events?queryType=userAgent&pks=user@example.com',
+      ...portalHeader
+    }
+
+    const response = await server.inject(options)
+    const { results } = JSON.parse(response.payload)
+
+    expect(results).toHaveLength(4)
+    expect(results[0].rowKey).toBe('101')
+    expect(results[1].rowKey).toBe('102')
+    expect(results[2].rowKey).toBe('103')
+    expect(results[3].rowKey).toBe('104')
+  })
+
   test('GET /external-events route returns 500 if db error', async () => {
     getExternalEvents.mockRejectedValue(new Error('Test error'))
 

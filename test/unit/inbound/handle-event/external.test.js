@@ -403,5 +403,56 @@ describe('external', () => {
         data: '{"message":"{\\"actioningUser\\":{\\"username\\":\\"john@email.com\\"},\\"details\\":{\\"username\\":\\"robocop@detroit.police.gov\\",\\"userAgent\\":\\"Robo-Client\\"}}"}'
       })
     })
+
+    test('should not save an event with unknown type', async () => {
+      const clientMock = {
+        listEntities: jest.fn()
+      }
+      getClient.mockResolvedValue(clientMock)
+
+      const event = {
+        partitionKey: 'unknown',
+        time: 1728916381110,
+        type: 'uk.gov.defra.ddi.event.unknown',
+        data: {
+          message: JSON.stringify({
+            actioningUser: { username: 'john@email.com' },
+            details: {
+              username: 'robocop@detroit.police.gov',
+              userAgent: 'Robo-Client'
+            }
+          })
+        }
+      }
+
+      await saveExternalEvent(event)
+      expect(getClient).toHaveBeenCalledWith(EXTERNAL_EVENT)
+      expect(createIfNotExists.mock.calls).toHaveLength(0)
+    })
+
+    test('should not save an event with no type', async () => {
+      const clientMock = {
+        listEntities: jest.fn()
+      }
+      getClient.mockResolvedValue(clientMock)
+
+      const event = {
+        partitionKey: 'unknown',
+        time: 1728916381110,
+        data: {
+          message: JSON.stringify({
+            actioningUser: { username: 'john@email.com' },
+            details: {
+              username: 'robocop@detroit.police.gov',
+              userAgent: 'Robo-Client'
+            }
+          })
+        }
+      }
+
+      await saveExternalEvent(event)
+      expect(getClient).toHaveBeenCalledWith(EXTERNAL_EVENT)
+      expect(createIfNotExists.mock.calls).toHaveLength(0)
+    })
   })
 })
