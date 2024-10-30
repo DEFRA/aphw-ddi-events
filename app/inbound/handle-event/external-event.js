@@ -1,7 +1,10 @@
 const { EXTERNAL_EVENT } = require('../../constants/event-types')
 const { getClient } = require('../../storage')
 const { createIfNotExists } = require('./create-if-not-exists')
-const { createDateEntity, createDogEntity, createOwnerEntity, createSearchEntities, createUserEntity, getUsername, createDogEntitiesFromOwner } = require('./external-event-builder')
+const {
+  createDateEntity, createDogEntity, createOwnerEntity, createSearchEntities, createUserEntity, getUsername, createDogEntitiesFromOwner,
+  createLoginEntity
+} = require('./external-event-builder')
 
 const saveExternalEvent = async (eventWithPk) => {
   const origPk = eventWithPk.partitionKey
@@ -35,6 +38,8 @@ const saveExternalEvent = async (eventWithPk) => {
     for (const entity of entities) {
       await createIfNotExists(client, entity)
     }
+  } else if (event.type?.endsWith('.external.login')) {
+    await createIfNotExists(client, createLoginEntity(event))
   }
 }
 
