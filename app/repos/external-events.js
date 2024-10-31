@@ -1,6 +1,9 @@
 const { EXTERNAL_EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
-const { constructSearchFilter, constructDateFilter, constructDogFilter, constructOwnerFilter, constructUserFilter } = require('./external-events-query-builder')
+const {
+  constructSearchFilter, constructDateFilter, constructDogFilter, constructOwnerFilter, constructUserFilter,
+  constructLoginFilter
+} = require('./external-events-query-builder')
 
 const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
   try {
@@ -17,6 +20,8 @@ const getExternalEvents = async (queryType, pks, fromDate, toDate) => {
       filterText = constructOwnerFilter(pks, fromDate, toDate)
     } else if (queryType === 'user') {
       filterText = constructUserFilter(pks, fromDate, toDate)
+    } else if (queryType === 'login') {
+      filterText = constructLoginFilter(pks, fromDate, toDate)
     } else {
       throw new Error('Not implemented')
     }

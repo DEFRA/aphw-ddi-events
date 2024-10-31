@@ -26,6 +26,10 @@ const createSearchEntity = (term, event) => {
   return createRowWithoutExtraTimestamp('search', `${term.toLowerCase()}|${getTimeString()}|${uuidv4()}`, EXTERNAL_EVENT, event)
 }
 
+const createLoginEntity = (event) => {
+  return createRowWithoutExtraTimestamp('login', `${getTimeString()}|${uuidv4()}`, EXTERNAL_EVENT, event)
+}
+
 const createDogEntitiesFromOwner = (event) => {
   const payload = JSON.parse(event.data?.message)
   const { details } = payload
@@ -61,6 +65,7 @@ module.exports = {
   createDateEntity,
   createDogEntity,
   createOwnerEntity,
+  createLoginEntity,
   createSearchEntities,
   createDogEntitiesFromOwner,
   getUsername

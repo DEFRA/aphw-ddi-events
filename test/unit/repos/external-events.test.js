@@ -8,6 +8,13 @@ describe('ExternalEvents repo', () => {
 
   let tableClient
 
+  const makeIterator = () => (async function * () {
+    yield eventsFromTable[0]
+    yield eventsFromTable[1]
+    yield eventsFromTable[2]
+    yield eventsFromTable[3]
+  })()
+
   beforeEach(() => {
     jest.resetModules()
 
@@ -23,12 +30,7 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for dog', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('dog', 'ED1')
@@ -37,12 +39,7 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for owner', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('owner', 'P-123-456')
@@ -51,12 +48,7 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for search', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('search', 'smith')
@@ -65,12 +57,7 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for search, multiple pks', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('search', 'smith,jones')
@@ -79,12 +66,7 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for user', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('user', 'john@here.com')
@@ -93,15 +75,19 @@ describe('ExternalEvents repo', () => {
   })
 
   test('getExternalEvents should return events for date', async () => {
-    const mockEventsIterator = (async function * () {
-      yield eventsFromTable[0]
-      yield eventsFromTable[1]
-      yield eventsFromTable[2]
-      yield eventsFromTable[3]
-    })()
+    const mockEventsIterator = makeIterator()
     getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
 
     const events = await getExternalEvents('date', '', '2024-05-05', '2024-10-10')
+
+    expect(events).toHaveLength(4)
+  })
+
+  test('getExternalEvents should return events for login', async () => {
+    const mockEventsIterator = makeIterator()
+    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
+
+    const events = await getExternalEvents('login', '', '2024-05-05', '2024-10-10')
 
     expect(events).toHaveLength(4)
   })
