@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
 const externalEventsQuerySchema = Joi.object({
-  queryType: Joi.string().valid('search', 'date', 'dog', 'owner', 'user', 'userAgent').required(),
+  queryType: Joi.string().valid('search', 'date', 'dog', 'owner', 'user', 'login').required(),
   fromDate: Joi.string().optional().allow('').allow(null),
   toDate: Joi.string().optional().allow('').allow(null),
   pks: Joi.string().required()
