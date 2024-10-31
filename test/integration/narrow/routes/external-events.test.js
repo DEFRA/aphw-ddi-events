@@ -70,7 +70,7 @@ describe('External-events endpoint', () => {
 
     const options = {
       method: 'GET',
-      url: '/external-events?queryType=userAgent&pks=user@example.com',
+      url: '/external-events?queryType=login&pks=user@example.com',
       ...portalHeader
     }
 
