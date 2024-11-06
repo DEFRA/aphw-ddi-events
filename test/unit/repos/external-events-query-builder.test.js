@@ -5,8 +5,11 @@ const {
 
 describe('ExternalEventsQueryBuilder', () => {
   describe('constructDateFilter', () => {
-    test('returns correct query', () => {
+    test('returns correct query when dates supplied', () => {
       expect(constructDateFilter([], '2024-05-05', '2024-10-10')).toBe('PartitionKey eq \'date\' and RowKey gt \'2024-05-05\' and RowKey lt \'2024-10-10\'')
+    })
+    test('returns correct query when no dates supplied', () => {
+      expect(constructDateFilter([])).toBe('PartitionKey eq \'date\'')
     })
   })
 

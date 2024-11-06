@@ -12,7 +12,14 @@ const constructSearchFilter = (pks, fromDate, toDate) => {
 }
 
 const constructDateFilter = (_pk, fromDate, toDate) => {
-  return `PartitionKey eq 'date' and RowKey gt '${fromDate}' and RowKey lt '${toDate}'`
+  let query = 'PartitionKey eq \'date\''
+  if (fromDate && fromDate !== '') {
+    query += ` and RowKey gt '${fromDate}'`
+  }
+  if (toDate && toDate !== '') {
+    query += ` and RowKey lt '${toDate}'`
+  }
+  return query
 }
 
 const constructDogFilter = (pk, fromDate, toDate) => {
