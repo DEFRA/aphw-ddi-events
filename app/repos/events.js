@@ -2,6 +2,7 @@ const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 const { getPseudonymsAsMap } = require('./pseudonyms')
 const systemPseudonyms = require('../constants/system-pseudonyms')
+const { timingLog } = require('../lib/log-helper')
 
 const constructQueryText = pks => {
   const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
@@ -10,20 +11,32 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
+    let logTime = timingLog('repos/events start 1')
+
     const pseudonyms = await getPseudonymsAsMap()
+
+    logTime = timingLog('repos/events mid 2', logTime)
 
     const client = getClient(EVENT)
 
+    logTime = timingLog('repos/events mid 3', logTime)
+
     const query = constructQueryText(pks)
+
+    logTime = timingLog('repos/events mid 4', logTime)
 
     const entities = client.listEntities({
       queryOptions: { filter: `${query}` }
     })
 
+    logTime = timingLog('repos/events mid 5', logTime)
+
     const results = []
     for await (const entity of entities) {
       results.push(mapEntity(entity, pseudonyms))
     }
+
+    timingLog('repos/events end 6', logTime)
 
     return results
   } catch (err) {
