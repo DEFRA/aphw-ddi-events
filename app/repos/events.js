@@ -10,36 +10,44 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
-    console.time('repos/events start 1')
+    console.time('repos/events getPseudonymsAsMap')
 
     const pseudonyms = await getPseudonymsAsMap()
 
-    console.timeEnd('repos/events start 1')
-    console.time('repos/events mid 2')
+    console.timeEnd('repos/events getPseudonymsAsMap')
+    console.time('repos/events getClient')
 
     const client = getClient(EVENT)
 
-    console.timeEnd('repos/events mid 2')
-    console.time('repos/events mid 3')
+    console.timeEnd('repos/events getClient')
+    console.time('repos/events constructQueryText')
 
     const query = constructQueryText(pks)
 
-    console.timeEnd('repos/events mid 3')
-    console.time('repos/events mid 4')
+    console.timeEnd('repos/events constructQueryText')
+    console.time('repos/events listEntities')
 
     const entities = client.listEntities({
       queryOptions: { filter: `${query}` }
     })
 
-    console.timeEnd('repos/events mid 4')
-    console.time('repos/events mid 5')
+    console.timeEnd('repos/events listEntities')
+    console.time('repos/events loop entities without mapping')
+
+    const unmappedResults = []
+    for await (const entity of entities) {
+      unmappedResults.push(entity)
+    }
+
+    console.timeEnd('repos/events loop entities without mapping')
+    console.time('repos/events map entities')
 
     const results = []
-    for await (const entity of entities) {
+    for (const entity of unmappedResults) {
       results.push(mapEntity(entity, pseudonyms))
     }
 
-    console.timeEnd('repos/events mid 5')
+    console.timeEnd('repos/events map entities')
 
     return results
   } catch (err) {
