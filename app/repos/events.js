@@ -10,20 +10,36 @@ const constructQueryText = pks => {
 
 const getEvents = async (pks) => {
   try {
+    console.time('repos/events start 1')
+
     const pseudonyms = await getPseudonymsAsMap()
+
+    console.timeEnd('repos/events start 1')
+    console.time('repos/events mid 2')
 
     const client = getClient(EVENT)
 
+    console.timeEnd('repos/events mid 2')
+    console.time('repos/events mid 3')
+
     const query = constructQueryText(pks)
+
+    console.timeEnd('repos/events mid 3')
+    console.time('repos/events mid 4')
 
     const entities = client.listEntities({
       queryOptions: { filter: `${query}` }
     })
 
+    console.timeEnd('repos/events mid 4')
+    console.time('repos/events mid 5')
+
     const results = []
     for await (const entity of entities) {
       results.push(mapEntity(entity, pseudonyms))
     }
+
+    console.timeEnd('repos/events mid 5')
 
     return results
   } catch (err) {

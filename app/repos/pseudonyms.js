@@ -45,12 +45,21 @@ const sortByUsername = (ascending = true) => {
  */
 const getPseudonyms = async () => {
   try {
+    console.time('repos/pseudonyms getPseudonyms start 1')
+
     const client = getPseudonymClient()
+
+    console.timeEnd('repos/pseudonyms getPseudonyms start 1')
+    console.time('repos/pseudonyms getPseudonyms mid 2')
 
     /**
      * @type {AsyncIterableIterator<StorageEntity>}
      */
     const entityIterator = client.listEntities()
+
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 2')
+    console.time('repos/pseudonyms getPseudonyms mid 3')
+
     /**
      * @type {StorageEntity[]}
      */
@@ -59,10 +68,24 @@ const getPseudonyms = async () => {
       entities.push(entity)
     }
 
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 3')
+    console.time('repos/pseudonyms getPseudonyms mid 4')
+
     const sortAlgorithm = sortByTimestamp(false)
+
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 4')
+    console.time('repos/pseudonyms getPseudonyms mid 5')
+
     const sortedEntities = [...entities].sort(sortAlgorithm)
 
-    return sortedEntities.map(mapEntityAsJson)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 5')
+    console.time('repos/pseudonyms getPseudonyms mid 6')
+
+    const res = sortedEntities.map(mapEntityAsJson)
+
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 6')
+
+    return res
   } catch (err) {
     console.log('Error getting pseudonyms', err.message)
     throw err
