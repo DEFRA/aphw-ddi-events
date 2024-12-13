@@ -4,7 +4,6 @@ const { DuplicateResourceError } = require('../errors/duplicateResourceError')
 const { ResourceNotFoundError } = require('../errors/resourceNotFound')
 const { auditAdd, auditRemove } = require('../lib/audit-helper')
 const { PSEUDONYM } = require('../constants/entity-names')
-const { timingLog } = require('../lib/log-helper')
 
 /**
  * @typedef {{
@@ -46,18 +45,20 @@ const sortByUsername = (ascending = true) => {
  */
 const getPseudonyms = async () => {
   try {
-    let logTime = timingLog('repos/pseudonyms getPseudonyms start 1')
+    console.time('repos/pseudonyms getPseudonyms start 1')
 
     const client = getPseudonymClient()
 
-    logTime = timingLog('repos/pseudonyms getPseudonyms mid 2', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms start 1')
+    console.time('repos/pseudonyms getPseudonyms mid 2')
 
     /**
      * @type {AsyncIterableIterator<StorageEntity>}
      */
     const entityIterator = client.listEntities()
 
-    logTime = timingLog('repos/pseudonyms getPseudonyms mid 3', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 2')
+    console.time('repos/pseudonyms getPseudonyms mid 3')
 
     /**
      * @type {StorageEntity[]}
@@ -67,19 +68,22 @@ const getPseudonyms = async () => {
       entities.push(entity)
     }
 
-    logTime = timingLog('repos/pseudonyms getPseudonyms mid 4', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 3')
+    console.time('repos/pseudonyms getPseudonyms mid 4')
 
     const sortAlgorithm = sortByTimestamp(false)
 
-    logTime = timingLog('repos/pseudonyms getPseudonyms mid 5', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 4')
+    console.time('repos/pseudonyms getPseudonyms mid 5')
 
     const sortedEntities = [...entities].sort(sortAlgorithm)
 
-    logTime = timingLog('repos/pseudonyms getPseudonyms mid 6', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 5')
+    console.time('repos/pseudonyms getPseudonyms mid 6')
 
     const res = sortedEntities.map(mapEntityAsJson)
 
-    timingLog('repos/pseudonyms getPseudonyms end 7', logTime)
+    console.timeEnd('repos/pseudonyms getPseudonyms mid 6')
 
     return res
   } catch (err) {
