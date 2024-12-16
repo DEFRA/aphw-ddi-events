@@ -45,23 +45,14 @@ const sortByUsername = (ascending = true) => {
  */
 const getPseudonyms = async () => {
   try {
-    console.time('repos/pseudonyms getPseudonyms getPseudonymClient')
-
     const client = getPseudonymClient()
 
-    console.timeEnd('repos/pseudonyms getPseudonyms getPseudonymClient')
-    console.time('repos/pseudonyms getPseudonyms listEntities')
-
-    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Client.listEntities()', client.listEntities())
     /**
      * @type {AsyncIterableIterator<StorageEntity>}
      */
     const entityIterator = client.listEntities().byPage({
       maxPageSize: 100
     })
-
-    console.timeEnd('repos/pseudonyms getPseudonyms listEntities')
-    console.time('repos/pseudonyms getPseudonyms loop entities')
 
     /**
      * @type {StorageEntity[]}
@@ -73,24 +64,11 @@ const getPseudonyms = async () => {
       }
     }
 
-    console.timeEnd('repos/pseudonyms getPseudonyms loop entities')
-    console.time('repos/pseudonyms getPseudonyms sortByTimestamp')
-
     const sortAlgorithm = sortByTimestamp(false)
-
-    console.timeEnd('repos/pseudonyms getPseudonyms sortByTimestamp')
-    console.time('repos/pseudonyms getPseudonyms sortedEntities')
 
     const sortedEntities = [...entities].sort(sortAlgorithm)
 
-    console.timeEnd('repos/pseudonyms getPseudonyms sortedEntities')
-    console.time('repos/pseudonyms getPseudonyms mapEntityAsJson')
-
-    const res = sortedEntities.map(mapEntityAsJson)
-
-    console.timeEnd('repos/pseudonyms getPseudonyms mapEntityAsJson')
-
-    return res
+    return sortedEntities.map(mapEntityAsJson)
   } catch (err) {
     console.log('Error getting pseudonyms', err.message)
     throw err
