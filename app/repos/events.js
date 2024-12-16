@@ -1,13 +1,7 @@
-const { odata } = require('@azure/data-tables')
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 const { getPseudonymsAsMap } = require('./pseudonyms')
 const systemPseudonyms = require('../constants/system-pseudonyms')
-
-const constructQueryText = pks => {
-  const queries = pks.map(x => `PartitionKey eq "${x.trim()}"`)
-  return queries.join(' or ')
-}
 
 const getEvents = async (pks) => {
   try {
@@ -21,41 +15,32 @@ const getEvents = async (pks) => {
     const client = getClient(EVENT)
 
     console.timeEnd('repos/events getClient')
-    console.time('repos/events constructQueryText')
-
-    const query = constructQueryText(pks)
-
-    console.timeEnd('repos/events constructQueryText')
-    console.time('repos/events listEntities')
-
-    /**
-     * @type {PagedAsyncIterableIterator}
-     */
-    const entityPages = client.listEntities({
-      queryOptions: { filter: odata`${query}` }
-    }).byPage({
-      maxPageSize: 100
-    })
-
-    console.timeEnd('repos/events listEntities')
-    console.time('repos/events loop entities without mapping')
-
-    const unmappedResults = []
-    for await (const page of entityPages) {
-      for (const entity of page) {
-        unmappedResults.push(entity)
-      }
-    }
-
-    console.timeEnd('repos/events loop entities without mapping')
-    console.time('repos/events map entities')
 
     const results = []
-    for (const entity of unmappedResults) {
-      results.push(mapEntity(entity, pseudonyms))
-    }
+    for (const pk of pks) {
+      console.time('repos/events listEntities')
 
-    console.timeEnd('repos/events map entities')
+      console.log('repos/events query', `PartitionKey eq '${pk.trim()}'`)
+      /**
+       * @type {PagedAsyncIterableIterator}
+       */
+      const entityPages = client.listEntities({
+        queryOptions: { filter: `PartitionKey eq '${pk.trim()}'` }
+      }).byPage({
+        maxPageSize: 100
+      })
+
+      console.timeEnd('repos/events listEntities')
+      console.time('repos/events loop entities')
+
+      for await (const page of entityPages) {
+        for (const entity of page) {
+          results.push(mapEntity(entity, pseudonyms))
+        }
+      }
+
+      console.timeEnd('repos/events loop entities')
+    }
 
     return results
   } catch (err) {
@@ -88,6 +73,5 @@ const mapEntity = (entity, pseudonyms) => {
 
 module.exports = {
   getEvents,
-  changeUsernameToPseudonym,
-  constructQueryText
+  changeUsernameToPseudonym
 }
