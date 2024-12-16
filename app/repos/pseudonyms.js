@@ -52,6 +52,7 @@ const getPseudonyms = async () => {
     console.timeEnd('repos/pseudonyms getPseudonyms getPseudonymClient')
     console.time('repos/pseudonyms getPseudonyms listEntities')
 
+    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Client.listEntities()', client.listEntities())
     /**
      * @type {AsyncIterableIterator<StorageEntity>}
      */

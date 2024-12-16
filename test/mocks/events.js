@@ -362,8 +362,28 @@ const eventsAsyncIterator = (async function * () {
   yield eventsFromTable[3]
 })()
 
+function MockEventsPagedAsyncIterator () {
+  this.byPage = (_options) => {
+    return (async function * () {
+      yield [eventsFromTable[0]]
+      yield [eventsFromTable[1]]
+      yield [eventsFromTable[2]]
+      yield [eventsFromTable[3]]
+    })()
+  }
+}
+
+// eslint-disable-next-line no-undef
+MockEventsPagedAsyncIterator.prototype[Symbol.asyncIterator] = async function * () {
+  yield eventsFromTable[0]
+  yield eventsFromTable[1]
+  yield eventsFromTable[2]
+  yield eventsFromTable[3]
+}
+
 module.exports = {
   eventsForRouteTests,
   eventsFromTable,
-  eventsAsyncIterator
+  eventsAsyncIterator,
+  MockEventsPagedAsyncIterator
 }
