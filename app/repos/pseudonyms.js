@@ -52,10 +52,13 @@ const getPseudonyms = async () => {
     console.timeEnd('repos/pseudonyms getPseudonyms getPseudonymClient')
     console.time('repos/pseudonyms getPseudonyms listEntities')
 
+    console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Client.listEntities()', client.listEntities())
     /**
      * @type {AsyncIterableIterator<StorageEntity>}
      */
-    const entityIterator = client.listEntities()
+    const entityIterator = client.listEntities().byPage({
+      maxPageSize: 100
+    })
 
     console.timeEnd('repos/pseudonyms getPseudonyms listEntities')
     console.time('repos/pseudonyms getPseudonyms loop entities')
@@ -65,7 +68,9 @@ const getPseudonyms = async () => {
      */
     const entities = []
     for await (const entity of entityIterator) {
-      entities.push(entity)
+      for (const pseudonym of entity) {
+        entities.push(pseudonym)
+      }
     }
 
     console.timeEnd('repos/pseudonyms getPseudonyms loop entities')

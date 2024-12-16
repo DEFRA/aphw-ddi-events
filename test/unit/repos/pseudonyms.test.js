@@ -1,4 +1,4 @@
-const { getMockPseudonymsAsyncIterator } = require('../../mocks/pseudonyms')
+const { MockPseudonymsPagedAsyncIterator } = require('../../mocks/pseudonyms')
 const {
   getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck, sortByTimestamp,
   sortByUsername
@@ -18,7 +18,7 @@ const { ResourceNotFoundError } = require('../../../app/errors/resourceNotFound'
 describe('Pseudonyms repo', () => {
   let tableClient
   const entityClient = jest.fn()
-  const listEntitiesMock = jest.fn(() => getMockPseudonymsAsyncIterator())
+  const listEntitiesMock = () => new MockPseudonymsPagedAsyncIterator()
   const deleteEntityMock = jest.fn()
 
   beforeEach(() => {
@@ -202,7 +202,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given username already exists', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUser({
@@ -234,7 +234,7 @@ describe('Pseudonyms repo', () => {
       }))
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator()),
+        listEntities: () => new MockPseudonymsPagedAsyncIterator(),
         createEntity: createEntityMock,
         getEntity: getEntityMock
       })
@@ -249,7 +249,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given username already exists', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -261,7 +261,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given username already exists but in different case 1', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -273,7 +273,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given username already exists but in different case 2', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -285,7 +285,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given pseudonym already exists', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -297,7 +297,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given pseudonym already exists but in different case', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -309,7 +309,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError given pseudonym already exists but in different case2', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -321,7 +321,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError with details given both username and pseudonym already exists', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({
@@ -333,7 +333,7 @@ describe('Pseudonyms repo', () => {
     test('should throw a DuplicateResourceError with details given both username and pseudonym already exists but in diff users', async () => {
       getPseudonymClient.mockReturnValue({
         createTable: jest.fn(),
-        listEntities: jest.fn().mockReturnValue(getMockPseudonymsAsyncIterator())
+        listEntities: () => new MockPseudonymsPagedAsyncIterator()
       })
 
       await expect(addUserPreflightCheck({

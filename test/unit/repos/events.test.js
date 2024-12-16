@@ -1,4 +1,4 @@
-const { eventsAsyncIterator: mockEventsIterator } = require('../../mocks/events')
+const { eventsAsyncIterator: mockEventsIterator, MockEventsPagedAsyncIterator } = require('../../mocks/events')
 
 describe('Events repo', () => {
   const { getEvents, constructQueryText, changeUsernameToPseudonym } = require('../../../app/repos/events')
@@ -26,7 +26,7 @@ describe('Events repo', () => {
   })
 
   test('getEvents should return events', async () => {
-    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
+    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: () => new MockEventsPagedAsyncIterator() })
     getPseudonymsAsMap.mockResolvedValue(new Map())
 
     const events = await getEvents(['ED1'])
