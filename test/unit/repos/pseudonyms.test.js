@@ -1,4 +1,4 @@
-const { getMockPseudonymsAsyncIterator, MockPseudonymsPagedAsyncIterator } = require('../../mocks/pseudonyms')
+const { MockPseudonymsPagedAsyncIterator } = require('../../mocks/pseudonyms')
 const {
   getPseudonyms, getPseudonymsAsMap, addUser, removeUser, findUserByUsername, addUserPreflightCheck, sortByTimestamp,
   sortByUsername
