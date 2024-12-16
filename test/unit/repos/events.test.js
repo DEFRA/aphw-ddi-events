@@ -45,7 +45,7 @@ describe('Events repo', () => {
 
     const query = constructQueryText(['ED1'])
 
-    expect(query).toBe('PartitionKey eq \'ED1\'')
+    expect(query).toBe('PartitionKey eq "ED1"')
   })
 
   test('constructQueryText should handle multipel PKs', async () => {
@@ -53,7 +53,7 @@ describe('Events repo', () => {
 
     const query = constructQueryText(['ED1', 'ED2', 'ED3'])
 
-    expect(query).toBe('PartitionKey eq \'ED1\' or PartitionKey eq \'ED2\' or PartitionKey eq \'ED3\'')
+    expect(query).toBe('PartitionKey eq "ED1" or PartitionKey eq "ED2" or PartitionKey eq "ED3"')
   })
 
   describe('mapEntity', () => {
