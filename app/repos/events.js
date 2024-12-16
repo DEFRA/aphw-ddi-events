@@ -27,16 +27,23 @@ const getEvents = async (pks) => {
     console.timeEnd('repos/events constructQueryText')
     console.time('repos/events listEntities')
 
-    const entities = client.listEntities({
+    /**
+     * @type {PagedAsyncIterableIterator}
+     */
+    const entityPages = client.listEntities({
       queryOptions: { filter: `${query}` }
+    }).byPage({
+      maxPageSize: 100
     })
 
     console.timeEnd('repos/events listEntities')
     console.time('repos/events loop entities without mapping')
 
     const unmappedResults = []
-    for await (const entity of entities) {
-      unmappedResults.push(entity)
+    for await (const page of entityPages) {
+      for (const entity of page) {
+        unmappedResults.push(entity)
+      }
     }
 
     console.timeEnd('repos/events loop entities without mapping')
