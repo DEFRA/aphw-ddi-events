@@ -1,10 +1,11 @@
+const { odata } = require('@azure/data-tables')
 const { EVENT } = require('../constants/event-types')
 const { getClient } = require('../storage')
 const { getPseudonymsAsMap } = require('./pseudonyms')
 const systemPseudonyms = require('../constants/system-pseudonyms')
 
 const constructQueryText = pks => {
-  const queries = pks.map(x => `PartitionKey eq '${x.trim()}'`)
+  const queries = pks.map(x => `PartitionKey eq "${x.trim()}"`)
   return queries.join(' or ')
 }
 
@@ -31,7 +32,7 @@ const getEvents = async (pks) => {
      * @type {PagedAsyncIterableIterator}
      */
     const entityPages = client.listEntities({
-      queryOptions: { filter: `${query}` }
+      queryOptions: { filter: odata`${query}` }
     }).byPage({
       maxPageSize: 100
     })
