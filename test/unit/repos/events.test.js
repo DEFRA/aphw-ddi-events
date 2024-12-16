@@ -1,7 +1,7 @@
-const { eventsAsyncIterator: mockEventsIterator, MockEventsPagedAsyncIterator } = require('../../mocks/events')
+const { MockEventsPagedAsyncIterator } = require('../../mocks/events')
 
 describe('Events repo', () => {
-  const { getEvents, constructQueryText, changeUsernameToPseudonym } = require('../../../app/repos/events')
+  const { getEvents, changeUsernameToPseudonym } = require('../../../app/repos/events')
 
   const { getClient } = require('../../../app/storage')
   jest.mock('../../../app/storage')
@@ -38,22 +38,6 @@ describe('Events repo', () => {
     getClient.mockReturnValue()
 
     await expect(getEvents(['ED1'])).rejects.toThrow('Cannot read properties of undefined (reading \'listEntities\')')
-  })
-
-  test('constructQueryText should handle single PK', async () => {
-    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
-
-    const query = constructQueryText(['ED1'])
-
-    expect(query).toBe('PartitionKey eq "ED1"')
-  })
-
-  test('constructQueryText should handle multipel PKs', async () => {
-    getClient.mockReturnValue({ createTable: jest.fn(), listEntities: jest.fn().mockReturnValue(mockEventsIterator) })
-
-    const query = constructQueryText(['ED1', 'ED2', 'ED3'])
-
-    expect(query).toBe('PartitionKey eq "ED1" or PartitionKey eq "ED2" or PartitionKey eq "ED3"')
   })
 
   describe('mapEntity', () => {
