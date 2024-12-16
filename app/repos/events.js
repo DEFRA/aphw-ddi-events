@@ -5,22 +5,12 @@ const systemPseudonyms = require('../constants/system-pseudonyms')
 
 const getEvents = async (pks) => {
   try {
-    console.time('repos/events getPseudonymsAsMap')
-
     const pseudonyms = await getPseudonymsAsMap()
-
-    console.timeEnd('repos/events getPseudonymsAsMap')
-    console.time('repos/events getClient')
 
     const client = getClient(EVENT)
 
-    console.timeEnd('repos/events getClient')
-
     const results = []
     for (const pk of pks) {
-      console.time('repos/events listEntities')
-
-      console.log('repos/events query', `PartitionKey eq '${pk.trim()}'`)
       /**
        * @type {PagedAsyncIterableIterator}
        */
@@ -30,16 +20,11 @@ const getEvents = async (pks) => {
         maxPageSize: 100
       })
 
-      console.timeEnd('repos/events listEntities')
-      console.time('repos/events loop entities')
-
       for await (const page of entityPages) {
         for (const entity of page) {
           results.push(mapEntity(entity, pseudonyms))
         }
       }
-
-      console.timeEnd('repos/events loop entities')
     }
 
     return results
