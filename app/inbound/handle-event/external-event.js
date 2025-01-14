@@ -26,7 +26,7 @@ const saveExternalEvent = async (eventWithPk) => {
         await createIfNotExists(client, entity)
       }
     }
-  } else if (event.type?.endsWith('.external.view.dog') || event.type?.endsWith('.external.view.dog.activity')) {
+  } else if (event.type?.endsWith('.external.view.dog') || event.type?.endsWith('.external.view.dog.activity') || event.type?.endsWith('.external.view.dog.download')) {
     await createIfNotExists(client, createUserEntity(getUsername(event), event))
 
     await createIfNotExists(client, createDogEntity(origPk, event))
