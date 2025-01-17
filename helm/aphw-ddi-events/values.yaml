@@ -63,7 +63,7 @@ ingress:
   endpoint: aphw-ddi-events
   server: example.com
 
-aadPodIdentity: true
+workloadIdentity: true
 
 azureIdentity:
   clientID: not-a-real-clientID
