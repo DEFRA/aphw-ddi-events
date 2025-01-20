@@ -19,11 +19,11 @@ const initialiseTables = async () => {
     pseudonymClient = TableClient.fromConnectionString(storageConfig.connectionString, storageConfig.pseudonymTable, { allowInsecureConnection: true })
   } else {
     console.log('Using DefaultAzureCredential for Table Client')
-    eventClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.eventTable, new DefaultAzureCredential())
-    externalEventClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.externalEventTable, new DefaultAzureCredential())
-    commentClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.commentTable, new DefaultAzureCredential())
-    warningClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.warningTable, new DefaultAzureCredential())
-    pseudonymClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.pseudonymTable, new DefaultAzureCredential())
+    eventClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.eventTable, new DefaultAzureCredential({ managedIdentityClientId: storageConfig.managedIdentityClientId }))
+    externalEventClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.externalEventTable, new DefaultAzureCredential({ managedIdentityClientId: storageConfig.managedIdentityClientId }))
+    commentClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.commentTable, new DefaultAzureCredential({ managedIdentityClientId: storageConfig.managedIdentityClientId }))
+    warningClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.warningTable, new DefaultAzureCredential({ managedIdentityClientId: storageConfig.managedIdentityClientId }))
+    pseudonymClient = new TableClient(`https://${storageConfig.account}.table.core.windows.net`, storageConfig.pseudonymTable, new DefaultAzureCredential({ managedIdentityClientId: storageConfig.managedIdentityClientId }))
   }
   console.log('Making sure tables exist')
   await eventClient.createTable(storageConfig.eventTable)

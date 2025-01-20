@@ -8,7 +8,8 @@ const schema = Joi.object({
   externalEventTable: Joi.string().default('externalevents'),
   commentTable: Joi.string().default('comments'),
   warningTable: Joi.string().default('warnings'),
-  pseudonymTable: Joi.string().default('pseudonyms')
+  pseudonymTable: Joi.string().default('pseudonyms'),
+  managedIdentityClientId: Joi.string().optional()
 })
 
 const config = {
@@ -19,7 +20,8 @@ const config = {
   externalEventTable: process.env.AZURE_STORAGE_EXTERNAL_EVENT_TABLE,
   commentTable: process.env.AZURE_STORAGE_COMMENT_TABLE,
   warningTable: process.env.AZURE_STORAGE_WARNING_TABLE,
-  pseudonymTable: process.env.AZURE_STORAGE_PSEUDONYM_TABLE
+  pseudonymTable: process.env.AZURE_STORAGE_PSEUDONYM_TABLE,
+  managedIdentityClientId: process.env.AZURE_CLIENT_ID
 }
 
 const result = schema.validate(config, {

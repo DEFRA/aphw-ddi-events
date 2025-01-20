@@ -1,5 +1,10 @@
 resources:
+  identity: aphw-ddi-events
   topics:
-    - name: events
-    - name: alert
-    
+    - name: aphw-ddi-index-alert
+      role: sender
+    - name: aphw-ddi-events
+      role: receiver
+      duplicateDetection: true
+      subscriptions:
+        - name: aphw-ddi-event-hub
