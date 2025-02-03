@@ -4,6 +4,7 @@ const { start, stop } = require('./messaging')
 const { initialiseTables } = require('./storage')
 const createServer = require('./server')
 
+/* istanbul ignore next */
 process.on(['SIGTERM', 'SIGINT'], async () => {
   await stop()
   process.exit(0)
