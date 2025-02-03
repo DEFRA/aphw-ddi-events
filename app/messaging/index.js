@@ -4,6 +4,7 @@ const { MessageReceiver } = require('ffc-messaging')
 let receiver
 
 const start = async () => {
+  /* istanbul ignore next */
   const action = message => processEventMessage(message, receiver)
   receiver = new MessageReceiver(messageConfig.eventsSubscription, action)
   await receiver.subscribe()

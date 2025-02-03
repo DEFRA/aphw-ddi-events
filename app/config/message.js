@@ -3,7 +3,7 @@ const { PRODUCTION } = require('../constants/environments')
 
 const schema = Joi.object({
   messageQueue: {
-    host: Joi.string(),
+    host: Joi.string().required(),
     username: Joi.string(),
     password: Joi.string(),
     useCredentialChain: Joi.bool().default(false),
