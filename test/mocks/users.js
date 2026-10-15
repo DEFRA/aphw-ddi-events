@@ -1,4 +1,3 @@
-
 const users = [
   {
     username: 'internal-user',
