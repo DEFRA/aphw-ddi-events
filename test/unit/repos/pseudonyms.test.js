@@ -186,12 +186,12 @@ describe('Pseudonyms repo', () => {
         username: 'Cassie.Bartell71',
         pseudonym: 'Rod'
       }, validUser)
-      expect(createEntityMock).toBeCalledWith({
+      expect(createEntityMock).toHaveBeenCalledWith({
         partitionKey: 'pseudonym',
         rowKey: expect.any(String),
         data: '{"username":"Cassie.Bartell71","pseudonym":"Rod"}'
       })
-      expect(getEntityMock).toBeCalledWith('pseudonym', expect.any(String))
+      expect(getEntityMock).toHaveBeenCalledWith('pseudonym', expect.any(String))
       expect(user).toEqual({
         rowKey: expect.any(String),
         username: 'Cassie.Bartell71',
@@ -361,7 +361,7 @@ describe('Pseudonyms repo', () => {
   describe('removeUser', () => {
     test('should remove user', async () => {
       await removeUser('jane-doe', validUser)
-      expect(deleteEntityMock).toBeCalledWith('pseudonym', '102')
+      expect(deleteEntityMock).toHaveBeenCalledWith('pseudonym', '102')
     })
     test('should return a DuplicateResourceError given user does not exist', async () => {
       await expect(removeUser('Cassie.Bartell71', validUser)).rejects.toThrow(ResourceNotFoundError)

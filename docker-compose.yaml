@@ -24,7 +24,7 @@ services:
       PERMITTED_DOMAINS: ${PERMITTED_DOMAINS}
 
   aphw-ddi-event-store-azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:3.23.0
+    image: mcr.microsoft.com/azure-storage/azurite:3.37.0
     command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose"
     labels:
       com.docker.compose.pay.role: aphw-ddi-event-store-azurite
