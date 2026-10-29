@@ -1,10 +1,33 @@
 resources:
   identity: aphw-ddi-events
-  topics:
-    - name: aphw-ddi-index-alert
-      role: sender
-    - name: aphw-ddi-events
-      role: receiver
-      duplicateDetection: true
-      subscriptions:
-        - name: aphw-ddi-event-hub
+  service_bus:
+    topics:
+      - name: aphw-ddi-index-alert
+        roles:
+          - name: sender
+      - name: aphw-ddi-events
+        requiresDuplicateDetection: true
+        duplicateDetectionHistoryTimeWindow: PT10M30S
+        defaultMessageTimeToLive: P100D
+        roles:
+          - name: receiver
+        subscriptions:
+          - name: aphw-ddi-event-hub
+  storage_accounts:
+    - name: aphw
+      tables:
+        - name: events
+          roles:
+            - name: tableContributor
+        - name: externalevents
+          roles:
+            - name: tableContributor
+        - name: comments
+          roles:
+            - name: tableContributor
+        - name: warnings
+          roles:
+            - name: tableContributor
+        - name: pseudonyms
+          roles:
+            - name: tableContributor

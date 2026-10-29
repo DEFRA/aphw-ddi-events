@@ -1,1 +1,27 @@
 ---
+environment: production
+environmentCode: test
+container:
+  messageQueueHost: DEVFFCINFSB1001.servicebus.windows.net
+  eventsTopicAddress: aphw-ddi-events
+  alertTopicAddress: aphw-ddi-index-alert
+secretProviderClass:
+  azure:
+    keyvaultName: DEVFFCINFKV1001
+    objects:
+      - objectName: devtest-ffcahwr-appInsights-connectionString
+        objectType: secret
+      - objectName: TEST-aphw-ddi-portal-jwt-public-key
+        objectType: secret
+      - objectName: TEST-aphw-ddi-enforcement-jwt-public-key
+        objectType: secret
+  secretObjects:
+    - secretName: aphw-ddi-events
+      type: Opaque
+      data:
+        - objectName: devtest-ffcahwr-appInsights-connectionString
+          key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: TEST-aphw-ddi-portal-jwt-public-key
+          key: PORTAL_PUBLIC_KEY
+        - objectName: TEST-aphw-ddi-enforcement-jwt-public-key
+          key: ENFORCEMENT_PUBLIC_KEY

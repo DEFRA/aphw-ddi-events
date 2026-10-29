@@ -1,3 +1,0 @@
----
-container.eventsTopicAddress: queue:aphw-ddi-events
-container.alertTopicAddress: queue:aphw-ddi-index-alert
