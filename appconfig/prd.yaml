@@ -1,1 +1,27 @@
 ---
+environment: production
+environmentCode: prd
+container:
+  messageQueueHost: PRDFFCINFSB1001.servicebus.windows.net
+  eventsTopicAddress: aphw-ddi-events
+  alertTopicAddress: aphw-ddi-index-alert
+secretProviderClass:
+  azure:
+    keyvaultName: PRDFFCINFKV1001
+    objects:
+      - objectName: prd-ffcahwr-appinsights-connectionString
+        objectType: secret
+      - objectName: PRD-aphw-ddi-portal-jwt-public-key
+        objectType: secret
+      - objectName: PRD-aphw-ddi-enforcement-jwt-public-key
+        objectType: secret
+  secretObjects:
+    - secretName: aphw-ddi-events
+      type: Opaque
+      data:
+        - objectName: prd-ffcahwr-appinsights-connectionString
+          key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: PRD-aphw-ddi-portal-jwt-public-key
+          key: PORTAL_PUBLIC_KEY
+        - objectName: PRD-aphw-ddi-enforcement-jwt-public-key
+          key: ENFORCEMENT_PUBLIC_KEY

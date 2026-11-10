@@ -1,0 +1,62 @@
+name: '$(Build.SourceBranchName)$(System.PullRequest.SourceBranch)$(Rev:.r)'
+
+trigger:
+  - main
+  - feature/*
+  - release/*
+
+pr:
+  - main
+  - releases/*
+
+parameters:
+  - name: prDeployment
+    type: boolean
+    default: true
+  - name: branchDeployment
+    type: boolean
+    default: true
+  - name: snd2Deployment
+    type: boolean
+    default: true
+  - name: snd1Deployment
+    type: boolean
+    default: false
+
+resources:
+  repositories:
+    - repository: templates
+      endpoint: DEFRA
+      type: github
+      name: defra/fcp-pipeline-common
+      # ref: branch-name
+
+extends:
+  template: fcp-common-pipeline.yaml@templates
+  parameters:
+    appFrameworkType: nodejs
+    prDeployment: ${{ parameters.prDeployment }}
+    branchDeployment: ${{ parameters.branchDeployment }}
+    sndDeployment: ${{ parameters.snd2Deployment }}
+    snd1Deployment: ${{ parameters.snd1Deployment }}
+    variableGroupName: aphw-ddi-events-env-var
+    pr_params:
+      container.azureStorageAccountName: $(snd2_container_azureStorageAccountName)
+      container.permittedDomains: $(snd2_container_permittedDomains)
+    snd2_params:
+      container.azureStorageAccountName: $(snd2_container_azureStorageAccountName)
+      container.permittedDomains: $(snd2_container_permittedDomains)
+    dev_params:
+      container.azureStorageAccountName: $(dev_container_azureStorageAccountName)
+      container.permittedDomains: $(dev_container_permittedDomains)
+    test_params:
+      container.azureStorageAccountName: $(test_container_azureStorageAccountName)
+      container.permittedDomains: $(test_container_permittedDomains)
+    pre_params:
+      container.azureStorageAccountName: $(pre_container_azureStorageAccountName)
+      container.permittedDomains: $(pre_container_permittedDomains)
+    prd_params:
+      container.azureStorageAccountName: $(prd_container_azureStorageAccountName)
+      container.permittedDomains: $(prd_container_permittedDomains)
+    enableServiceNowChangeCreationDev: false
+    enableServiceNowChangeCreation: true

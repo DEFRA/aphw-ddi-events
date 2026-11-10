@@ -12,11 +12,10 @@ appInsights:
   connectionString:
 
 containerConfigMap:
-  name: aphw-ddi-events-config-map
+  name: aphw-ddi-events
 
 containerSecret:
-  name: aphw-ddi-events-container-secret
-  type: Opaque
+  name: aphw-ddi-events
 
 deployment:
   replicas: 1
@@ -38,8 +37,6 @@ container:
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
   azureStorageAccountName: dangerousdogindex
-  publicKeyPortal: dummy
-  publicKeyEnforcement: dummy
   permittedDomains: dummy
 
 livenessProbe:
@@ -68,3 +65,24 @@ workloadIdentity: true
 azureIdentity:
   clientID: not-a-real-clientID
   resourceID: not-a-real-resourceID
+
+secretProviderClass:
+  azure:
+    keyvaultName: SNDFFCINFKV2001
+    objects:
+      - objectName: snd2-aphw-appinsights-connectionString
+        objectType: secret
+      - objectName: snd2-aphw-ddi-portal-jwt-public-key
+        objectType: secret
+      - objectName: snd2-aphw-ddi-enforcement-jwt-public-key
+        objectType: secret
+  secretObjects:
+    - secretName: aphw-ddi-events
+      type: Opaque
+      data:
+        - objectName: snd2-aphw-appinsights-connectionString
+          key: APPLICATIONINSIGHTS_CONNECTION_STRING
+        - objectName: snd2-aphw-ddi-portal-jwt-public-key
+          key: PORTAL_PUBLIC_KEY
+        - objectName: snd2-aphw-ddi-enforcement-jwt-public-key
+          key: ENFORCEMENT_PUBLIC_KEY
