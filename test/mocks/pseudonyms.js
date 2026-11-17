@@ -1,4 +1,3 @@
-
 const pseudonyms = [
   {
     rowKey: '102',

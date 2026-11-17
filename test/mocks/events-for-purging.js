@@ -1,4 +1,3 @@
-
 const forPurging = [
   {
     partitionKey: 'ED12345',

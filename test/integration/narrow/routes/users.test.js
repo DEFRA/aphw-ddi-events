@@ -101,7 +101,7 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(200)
-      expect(addUser).toBeCalledWith({
+      expect(addUser).toHaveBeenCalledWith({
         username: 'internal-system',
         pseudonym: 'Hal 3000'
       }, validUser)
@@ -262,7 +262,7 @@ describe('Users endpoint', () => {
       const response = await server.inject(options)
       expect(response.statusCode).toBe(204)
       expect(response.payload).toBe('')
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
+      expect(removeUser).toHaveBeenCalledWith('Cassie.Bartell71', validUser)
     })
 
     test('DELETE /users returns a 404 given username does not exist', async () => {
@@ -275,7 +275,7 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(404)
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
+      expect(removeUser).toHaveBeenCalledWith('Cassie.Bartell71', validUser)
       expect(response.payload).toBe('Username not found')
     })
 
@@ -289,7 +289,7 @@ describe('Users endpoint', () => {
 
       const response = await server.inject(options)
       expect(response.statusCode).toBe(500)
-      expect(removeUser).toBeCalledWith('Cassie.Bartell71', validUser)
+      expect(removeUser).toHaveBeenCalledWith('Cassie.Bartell71', validUser)
     })
 
     test('DELETE /users returns a 404 given username is missing', async () => {

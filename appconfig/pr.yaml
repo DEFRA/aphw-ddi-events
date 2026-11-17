@@ -1,0 +1,7 @@
+---
+environment: production
+environmentCode: snd
+container:
+  messageQueueHost: SNDFFCINFSB2001.servicebus.windows.net
+  eventsTopicAddress: queue:aphw-ddi-events
+  alertTopicAddress: queue:aphw-ddi-index-alert
